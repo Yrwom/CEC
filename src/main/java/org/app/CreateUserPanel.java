@@ -9,11 +9,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -26,33 +29,59 @@ public class CreateUserPanel implements Initializable {
     private TextField newPassword;
     @FXML
     private ComboBox<String> newRole;
+    @FXML
+    private Label userErrorMessage;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources){
-        newRole.getItems().addAll("Event Coordinator","Participant","Guest");
+    public void initialize(URL location, ResourceBundle resources) {
+        newRole.getItems().addAll("Event Coordinator", "Participant", "Guest");
     }
-    public void NewUser(ActionEvent createNewUser){
-        try{
-            System.out.println("We are in NewUser");
-            if (authService.newUser(newUsername.getText(), newPassword.getText(), newRole.getValue())) {
-                System.out.println("User Created!");
 
-                ((Node)createNewUser.getSource()).getScene().getWindow().hide();
+    public void NewUser(ActionEvent createNewUser) {
+        try {
 
-                Stage AuthPanel = new Stage();
-                FXMLLoader loader = new FXMLLoader();
+            if (authService.newUser(newUsername.getText(), newPassword.getText(), newRole.getValue())){
+                try {
+                    System.out.println("We are in NewUser");
 
-                Pane root = loader.load(getClass().getResource("/AuthPanel.fxml").openStream());
-                AuthPanel.setTitle("Auth Panel");
-                AuthPanel.setScene(new Scene(root));
-                AuthPanel.show();
+                    System.out.println("User Created!");
 
-            }else{
-                System.out.println("Its broken");
+                    ((Node) createNewUser.getSource()).getScene().getWindow().hide();
+
+                    Stage userSuccessPanel = new Stage();
+                    userSuccessPanel.initModality(Modality.APPLICATION_MODAL);
+                    FXMLLoader loader = new FXMLLoader();
+
+                    Pane root = loader.load(getClass().getResource("/CreateUserSuccessPanel.FXML").openStream());
+                    CreateUserSuccessPanel createUserSuccessPanel = (CreateUserSuccessPanel) loader.getController();
+                    userSuccessPanel.setTitle("Success!");
+                    userSuccessPanel.setScene(new Scene(root));
+                    userSuccessPanel.show();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+
+                    System.out.println("Its broken");
+                    Stage userErrorPanel = new Stage();
+                    userErrorPanel.initModality(Modality.APPLICATION_MODAL);
+                    FXMLLoader loader = new FXMLLoader();
+
+                    Pane root = loader.load(getClass().getResource("/CreateUserErrorPanel.fxml").openStream());
+                    CreateUserErrorPanel createUserErrorPanel = (CreateUserErrorPanel) loader.getController();
+                    userErrorPanel.setTitle("Error!");
+                    userErrorPanel.setScene(new Scene(root));
+                    userErrorPanel.show();
+
+
+                } catch (IOException I) {
+                    I.printStackTrace();
+                }
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        }
     }
+}
 

@@ -48,16 +48,35 @@ public class AuthService {
         }
 
     }
-
+    public boolean isValidPassword(String password){
+        try {
+            System.out.println("We are in isValidPassword");
+            String whiteSpaceRegex = "(?=\\\\S+$)";
+            String digitRegex = "(?=.*[0-9])";
+            String specialCharacterRegex = "((?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$)";
+            if (password == null) {
+                return false;
+            } else if(password.matches(whiteSpaceRegex)){
+                return false;
+            }else if(password.matches(digitRegex)) {
+                return false;
+            }else if (password.matches(specialCharacterRegex)){
+                return false;
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+        }
     public boolean newUser(String username, String password, String role) {
         String query = "INSERT INTO users(username,password,role) values(?,?,?)";
-        Connection connection = SqliteConnection.Connector();
-        try {
+
+        try (Connection connection = SqliteConnection.Connector()){
 
                 if (connection == null) {
                     System.out.println("Failed to establish a database connection!");
                     return false;
-                }else {
+                }else if(!isValidPassword(password)){
                     PreparedStatement preparedStatement = connection.prepareStatement(query);
                     System.out.println("We made it here");
 
@@ -73,6 +92,8 @@ public class AuthService {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
+
+
             }
             return false;
         }
