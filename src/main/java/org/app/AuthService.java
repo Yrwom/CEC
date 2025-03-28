@@ -1,7 +1,10 @@
 package org.app;
 import java.sql.*;
 public class AuthService {
+
     Connection connection;
+    public static String responseCode;
+
 
     public AuthService() {
         connection = SqliteConnection.Connector();
@@ -48,19 +51,42 @@ public class AuthService {
         }
 
     }
+    public static void setResponseCode(String code) {
+        responseCode = code;
+    }
+    public static String getResponseCode() {
+        return responseCode;
+    }
     public boolean isValidPassword(String password){
         try {
             System.out.println("We are in isValidPassword");
-            String whiteSpaceRegex = "(?=\\\\S+$)";
-            String digitRegex = "(?=.*[0-9])";
-            String specialCharacterRegex = "((?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$)";
+
+            String whiteSpaceRegex = ".*\\s.*";
+            String digitRegex = ".*\\d.*";
+            String specialCharacterRegex = ".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*";
             if (password == null) {
+                System.out.println("Null Test");
+                AuthService.setResponseCode("Password is Null");
                 return false;
             } else if(password.matches(whiteSpaceRegex)){
+                System.out.println("Whitespace Test");
+                System.out.println(password);
+                AuthService.setResponseCode("Password has Whitespace");
                 return false;
-            }else if(password.matches(digitRegex)) {
+            }else if(!password.matches(digitRegex)) {
+                System.out.println("contains digit");
+                System.out.println(password);
+                AuthService.setResponseCode("Password requires digits");
                 return false;
-            }else if (password.matches(specialCharacterRegex)){
+            }else if (!password.matches(specialCharacterRegex)){
+                System.out.println("Special Character test");
+                System.out.println(password);
+                AuthService.setResponseCode("Password requires at least 1 special character");
+                return false;
+            }else if (password.length() < 8){
+                System.out.println("length check");
+                System.out.println(password);
+                AuthService.setResponseCode("Password must be 8 characters long");
                 return false;
             }
         }catch (Exception e) {
@@ -76,7 +102,7 @@ public class AuthService {
                 if (connection == null) {
                     System.out.println("Failed to establish a database connection!");
                     return false;
-                }else if(!isValidPassword(password)){
+                }else if(isValidPassword(password)){
                     PreparedStatement preparedStatement = connection.prepareStatement(query);
                     System.out.println("We made it here");
 
@@ -101,4 +127,5 @@ public class AuthService {
 
 
     }
+
 
