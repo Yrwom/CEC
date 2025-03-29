@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.app.VotingPanel">
+   <children>
+      <Label layoutX="263.0" layoutY="25.0" prefHeight="17.0" prefWidth="73.0" text="Voting Panel" />
+      <Button layoutX="534.0" layoutY="12.0" mnemonicParsing="false" text="Close" />
+      <Label layoutX="132.0" layoutY="75.0" prefHeight="17.0" prefWidth="45.0" text="Event:" />
+      <RadioButton layoutX="132.0" layoutY="121.0" mnemonicParsing="false" text="Yes" />
+      <RadioButton layoutX="133.0" layoutY="158.0" mnemonicParsing="false" text="No" />
+      <Button layoutX="274.0" layoutY="237.0" mnemonicParsing="false" text="Submit Vote" />
+      <Label layoutX="177.0" layoutY="75.0" prefHeight="17.0" prefWidth="82.0" text="Event Placeholder" textAlignment="CENTER" />
+   </children>
+</AnchorPane>

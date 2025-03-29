@@ -13,5 +13,8 @@
          </font>
       </Label>
       <Button fx:id="Logout" layoutX="1475.0" layoutY="23.0" mnemonicParsing="false" onAction="#Logout" text="Logout" textAlignment="CENTER" />
+      <Button fx:id="openSettings" layoutX="1405.0" layoutY="23.0" mnemonicParsing="false" onAction="#OpenSettings" text="Settings" />
+      <Button fx:id="createEvent" layoutX="1308.0" layoutY="23.0" mnemonicParsing="false" onAction="#OpenEventCreation" text="Create Event" />
+      <Button fx:id="openSync" layoutX="1257.0" layoutY="23.0" mnemonicParsing="false" onAction="#OpenSync" text="Sync" textAlignment="CENTER" />
    </children>
 </AnchorPane>

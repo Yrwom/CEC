@@ -1,11 +1,11 @@
 package org.app;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,9 +13,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class AuthPanel implements Initializable {
@@ -31,14 +31,15 @@ public class AuthPanel implements Initializable {
     private Button userCreation;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources){
-        if(authService.isDbConnected()){
+    public void initialize(URL location, ResourceBundle resources) {
+        if (authService.isDbConnected()) {
             isConnected.setText("Database Connection Established!");
         } else {
             isConnected.setText("Database Connection Failed!");
         }
     }
-    public void Login (ActionEvent login){
+
+    public void Login(ActionEvent login) {
         try {
             if (authService.isLogin(inputUsername.getText(), inputPassword.getText())) {
                 isConnected.setText("Login Success!");
@@ -46,7 +47,7 @@ public class AuthPanel implements Initializable {
 
                 //close login window on NavPanel open
                 System.out.println("Opening Navigation Panel...");
-                ((Node)login.getSource()).getScene().getWindow().hide();
+                ((Node) login.getSource()).getScene().getWindow().hide();
 
                 System.out.println("Creating Stage...");
                 Stage navPanel = new Stage();
@@ -55,7 +56,7 @@ public class AuthPanel implements Initializable {
                 System.out.println("Opening Stream...");
                 Pane root = loader.load(getClass().getResource("/NavigationPanel.fxml").openStream());
                 System.out.println("Loading Controller...");
-                NavigationPanel navigationPanel = (NavigationPanel)loader.getController();
+                NavigationPanel navigationPanel = (NavigationPanel) loader.getController();
 
                 System.out.println("Setting Title...");
                 navigationPanel.SetNavTitle(inputUsername.getText());
@@ -65,7 +66,7 @@ public class AuthPanel implements Initializable {
                 navPanel.setScene(new Scene(root));
                 navPanel.show();
 
-            }else{
+            } else {
                 isConnected.setText("Login Failed! Username or Password is incorrect.");
                 System.out.println("Fail");
                 System.out.println(inputUsername.getText());
@@ -75,11 +76,12 @@ public class AuthPanel implements Initializable {
        /*  catch (SQLException e)
            isConnected.setText("Login Failed! Username or Password is incorrect.");
            e.printStackTrace(); */
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-          }
         }
-    public void CreateUser(ActionEvent userCreation)  {
+    }
+
+    public void CreateUser(ActionEvent userCreation) {
         try {
             System.out.println("Opening User Creation Panel...");
             ((Node) userCreation.getSource()).getScene().getWindow().hide();
@@ -101,9 +103,35 @@ public class AuthPanel implements Initializable {
 
             System.out.println("Displaying Panel...");
             userPanel.show();
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }
         }
     }
 
+    public void OpenOffline(ActionEvent openOffline) {
+        try {
+            System.out.println("Creating Stage...");
+            Stage offlinePanel = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+
+            System.out.println("Opening Stream...");
+            Pane root = loader.load(getClass().getResource("/OfflineModePanel.fxml").openStream());
+            System.out.println("Loading Controller...");
+            OfflineModePanel offlineOptionPanel = (OfflineModePanel) loader.getController();
+
+            System.out.println("Setting Title...");
+
+            offlinePanel.setTitle("Settings  Panel");
+
+            System.out.println("Setting Scene...");
+            offlinePanel.setScene(new Scene(root));
+            offlinePanel.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void CloseCEC(ActionEvent closeCEC){
+            System.out.println("Closing CEC!");
+            Platform.exit();
+    }
+}
