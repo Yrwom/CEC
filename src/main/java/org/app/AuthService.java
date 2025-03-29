@@ -54,9 +54,11 @@ public class AuthService {
     public static void setResponseCode(String code) {
         responseCode = code;
     }
+
     public static String getResponseCode() {
         return responseCode;
     }
+
     public boolean isValidPassword(String password){
         try {
             System.out.println("We are in isValidPassword");
