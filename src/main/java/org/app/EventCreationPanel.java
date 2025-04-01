@@ -1,6 +1,12 @@
 package org.app;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -11,10 +17,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.w3c.dom.Text;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class EventCreationPanel implements Initializable {
@@ -32,18 +41,33 @@ public class EventCreationPanel implements Initializable {
     @FXML
     private DatePicker inputEndDate;
     @FXML
-    private Spinner inputMaxParticipants;
+    private Spinner<Integer> inputMaxParticipants;
+    @FXML
+    private Label eventResponseCode;
     @FXML
     private TextField inputLocation;
     @FXML
     private TextField inputEventDescription;
 
+    private int maxParticipants = 1;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+            SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,99, 1);
+            inputMaxParticipants.setValueFactory(valueFactory);
+            inputMaxParticipants.getValue();
+
+
+            inputMaxParticipants.valueProperty().addListener(new ChangeListener<Integer>() {
+                @Override
+                public void changed(ObservableValue<? extends Integer> observableValue, Integer integer, Integer t1) {
+                    maxParticipants = inputMaxParticipants.getValue();
+                    System.out.println(maxParticipants);
+                }
+            });
 
     }
-
     public void SetEventTypePublic(ActionEvent RadioButton) {
         eventType = "Public";
     }
@@ -68,13 +92,35 @@ public class EventCreationPanel implements Initializable {
 
     }
     }
-    public void SubmitEvent(ActionEvent submitEvent){
+    public void SubmitEvent(){
         try {
-            if(eventCreationService.NewEvent(inputEventName.getText(), inputStartDate.getValue(), inputEndDate.getValue(), (Integer) inputMaxParticipants.getValue(), inputLocation.getText(), eventType, inputEventDescription.getText(), votingStatus)){
+            if(eventCreationService.NewEvent(inputEventName.getText(), inputStartDate.getValue(), inputEndDate.getValue(), maxParticipants, inputLocation.getText(), eventType, inputEventDescription.getText(), votingStatus)){
+                System.out.println("We are in SubmitEvent and passed. Check db");
+               final int [] secondsRemaining = {5};
 
+               Timeline countDown = new Timeline(new KeyFrame(Duration.seconds(1), event ->{
+                   secondsRemaining[0]--;
+
+                   eventResponseCode.setText("Event Created successfully, window closing in " + secondsRemaining[0] + " seconds!");
+                    if(secondsRemaining[0]<= 0){
+                        Stage stage = (Stage) eventResponseCode.getScene().getWindow();
+                        stage.close();
+                    }
+
+               }));
+               countDown.setCycleCount(5);
+               countDown.play();
+            }else {
+                System.out.println(EventCreationService.getResponseCode());
+                eventResponseCode.setText(EventCreationService.getResponseCode());
             }
         }catch(Exception e){
             e.printStackTrace();
         }
     }
-}
+    public void DateCheck(){
+        if(eventCreationService.DateCompare(inputStartDate.getValue(), inputEndDate.getValue())) {
+            EventCreationService.setResponseCode("End Date must be the same or later than the start date!");
+        }
+        }
+    }
