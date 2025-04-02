@@ -13,9 +13,12 @@
 <AnchorPane prefHeight="837.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.app.EventCreationPanel">
    <children>
       <Button fx:id="eventClose" layoutX="539.0" layoutY="14.0" mnemonicParsing="false" onAction="#CloseEventCreationPanel" text="Abort" textAlignment="CENTER" textFill="#e61313" />
-      <Label layoutX="227.0" layoutY="31.0" prefHeight="44.0" prefWidth="146.0" text="Event Creator" textAlignment="CENTER" wrapText="true" />
+      <Label alignment="TOP_CENTER" contentDisplay="TOP" layoutX="217.0" layoutY="17.0" prefHeight="44.0" prefWidth="146.0" text="Event Creator" wrapText="true">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
       <TextField fx:id="inputEventName" layoutX="225.0" layoutY="159.0" promptText="Enter Event Name" />
-      <DatePicker fx:id="inputStartDate" layoutX="225.0" layoutY="225.0" onAction="#DateCheck" promptText="Select Start Date" />
+      <DatePicker fx:id="inputStartDate" layoutX="225.0" layoutY="225.0" promptText="Select Start Date" />
       <DatePicker fx:id="inputEndDate" layoutX="225.0" layoutY="286.0" onAction="#DateCheck" promptText="Select End Date" />
       <Spinner fx:id="inputMaxParticipants" editable="true" layoutX="228.0" layoutY="352.0" prefHeight="25.0" prefWidth="159.0" />
       <TextField fx:id="inputLocation" layoutX="225.0" layoutY="404.0" promptText="Enter Location" />
@@ -31,7 +34,7 @@
          </toggleGroup>
       </RadioButton>
       <RadioButton layoutX="225.0" layoutY="696.0" mnemonicParsing="false" onAction="#SetVotingDisabled" text="Voting Disabled" toggleGroup="$VotingStatus" />
-      <Button fx:id="submitEvent" layoutX="257.0" layoutY="768.0" mnemonicParsing="false" onAction="#SubmitEvent" text="Submit Event" textAlignment="CENTER" />
+      <Button fx:id="submitEvent" alignment="BOTTOM_CENTER" layoutX="247.0" layoutY="766.0" mnemonicParsing="false" onAction="#SubmitEvent" text="Submit Event" textAlignment="CENTER" />
       <Label layoutX="227.0" layoutY="141.0" prefHeight="17.0" prefWidth="97.0" text="Event Name:" />
       <Label layoutX="227.0" layoutY="207.0" prefHeight="17.0" prefWidth="97.0" text="Start Date:" />
       <Label layoutX="227.0" layoutY="268.0" prefHeight="17.0" prefWidth="97.0" text="End Date:" />
@@ -40,11 +43,14 @@
       <Label layoutX="227.0" layoutY="438.0" prefHeight="17.0" prefWidth="97.0" text="Event Type:" />
       <Label layoutX="227.0" layoutY="328.0" prefHeight="17.0" prefWidth="125.0" text="Max Participants (1-99)" />
       <Label layoutX="226.0" layoutY="637.0" text="Voting Status:" />
-      <Label layoutX="115.0" layoutY="75.0" prefHeight="59.0" prefWidth="74.0" text="STATUS:">
+      <Label fx:id="statusLabel" layoutX="21.0" layoutY="58.0" prefHeight="59.0" prefWidth="74.0" text="STATUS:" textAlignment="CENTER">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="eventResponseCode" layoutX="225.0" layoutY="83.0" prefHeight="44.0" prefWidth="149.0" text="EventCreateResponse" textAlignment="CENTER" wrapText="true" />
+      <Label fx:id="eventResponseCode" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="108.0" layoutY="48.0" prefHeight="79.0" prefWidth="363.0" textAlignment="CENTER" wrapText="true">
+         <font>
+            <Font size="16.0" />
+         </font></Label>
    </children>
 </AnchorPane>

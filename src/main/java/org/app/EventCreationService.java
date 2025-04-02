@@ -4,12 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import javafx.scene.paint.Color;
 
 public class EventCreationService {
 
     Connection connection;
     public static String responseCode;
     public static String dateCompareResult;
+    public static int dateCompareResultInt;
+    public static Color statusLabelColor;
 
 
     public EventCreationService() {
@@ -27,19 +30,24 @@ public class EventCreationService {
             return false;
         }
     }
-    public static void setDateComparedResult(String code) {
-        dateCompareResult = code;
-    }
+    public static void setDateComparedResultInt(int code) {dateCompareResultInt = code;}
+    public static int getDateCompareResultInt() {return dateCompareResultInt;}
 
-    public static String getDateCompareResult() {
-        return dateCompareResult;
-    }
+    public static void setDateComparedResult(String code) {dateCompareResult = code;}
+    public static String getDateCompareResult() {return dateCompareResult;}
+
     public static void setResponseCode(String code) {
         responseCode = code;
     }
-
     public static String getResponseCode() {
         return responseCode;
+    }
+
+    public static void setStatusLabelColor(Color code) {
+        statusLabelColor = code;
+    }
+    public static Color getStatusLabelColor() {
+        return statusLabelColor;
     }
 
     public boolean NewEvent(String eventName, LocalDate startDate, LocalDate endDate, int maxParticipants, String location, String eventType, String eventDescription, Boolean votingStatus) {
@@ -58,33 +66,45 @@ public class EventCreationService {
 
             if (connection == null) {
                 System.out.println("Failed to establish a database connection!");
+                setStatusLabelColor(Color.RED);
                 return false;
             }
             if (eventName.isEmpty()) {
                 EventCreationService.setResponseCode("Event Name Cannot be empty!");
+                setStatusLabelColor(Color.RED);
                 return false;
             }
             if (startDate == null) {
 
                 EventCreationService.setResponseCode("Start Date Cannot be empty!");
+                setStatusLabelColor(Color.RED);
                 return false;
             }
             if (endDate == null) {
                 EventCreationService.setResponseCode("End Date Cannot be empty!");
+                setStatusLabelColor(Color.RED);
+                return false;
+            }
+            if(dateCompareResultInt == -1){
+                EventCreationService.setResponseCode("End Date must be the same or later than the start date!");
+                setStatusLabelColor(Color.RED);
                 return false;
             }
             if (location.isEmpty()) {
                 EventCreationService.setResponseCode("Event must have a location!");
+                setStatusLabelColor(Color.RED);
                 return false;
             }
             if (eventType == null) {
                 EventCreationService.setResponseCode(("Please select an event type!"));
+                setStatusLabelColor(Color.RED);
+                return false;
             }
             if (votingStatus == null) {
                 EventCreationService.setResponseCode("Please select a voting option!");
+                setStatusLabelColor(Color.RED);
+                return false;
             }
-
-
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -115,7 +135,7 @@ public class EventCreationService {
             if (rowsInserted > 0) {
                 System.out.println("A new Event was inserted successfully!");
                 EventCreationService.setResponseCode("Event Created Successfully, window closing in 5 seconds.");
-
+                setStatusLabelColor(Color.GREEN);
                 return true;
             }
         }catch(Exception e){
@@ -130,11 +150,13 @@ public class EventCreationService {
 
         dateCompare = startDate.compareTo(endDate);
         System.out.println(dateCompare);
-        if(dateCompare == 1) {
+        if(dateCompare <= 0) {
             setDateComparedResult("true");
+            setDateComparedResultInt(1);
             return true;
         }else{
             setDateComparedResult("false");
+            setDateComparedResultInt(-1);
             return false;
         }
 

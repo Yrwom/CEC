@@ -15,12 +15,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.w3c.dom.Text;
-
 import javax.swing.*;
+import javafx.scene.paint.Color;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.time.LocalDate;
@@ -48,6 +51,8 @@ public class EventCreationPanel implements Initializable {
     private TextField inputLocation;
     @FXML
     private TextField inputEventDescription;
+    @FXML
+    private Label statusLabel;
 
     private int maxParticipants = 1;
 
@@ -95,6 +100,7 @@ public class EventCreationPanel implements Initializable {
     public void SubmitEvent(){
         try {
             if(eventCreationService.NewEvent(inputEventName.getText(), inputStartDate.getValue(), inputEndDate.getValue(), maxParticipants, inputLocation.getText(), eventType, inputEventDescription.getText(), votingStatus)){
+                statusLabel.setTextFill(Color.GREEN);
                 System.out.println("We are in SubmitEvent and passed. Check db");
                final int [] secondsRemaining = {5};
 
@@ -111,6 +117,7 @@ public class EventCreationPanel implements Initializable {
                countDown.setCycleCount(5);
                countDown.play();
             }else {
+                statusLabel.setTextFill(EventCreationService.getStatusLabelColor());
                 System.out.println(EventCreationService.getResponseCode());
                 eventResponseCode.setText(EventCreationService.getResponseCode());
             }
@@ -119,8 +126,9 @@ public class EventCreationPanel implements Initializable {
         }
     }
     public void DateCheck(){
-        if(eventCreationService.DateCompare(inputStartDate.getValue(), inputEndDate.getValue())) {
+        if(!eventCreationService.DateCompare(inputStartDate.getValue(), inputEndDate.getValue())) {
             EventCreationService.setResponseCode("End Date must be the same or later than the start date!");
+            eventResponseCode.setText(EventCreationService.getResponseCode());
         }
         }
     }
