@@ -36,7 +36,14 @@ public class CreateUserPanel implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         newRole.getItems().addAll("Event Coordinator", "Participant", "Guest");
     }
+    public void CloseUserCreationPanel(ActionEvent closeCreationPanel) {
+        try {
+            ((Node) closeCreationPanel.getSource()).getScene().getWindow().hide();
+        } catch (Exception e) {
+            e.printStackTrace();
 
+        }
+    }
     public void NewUser(ActionEvent createNewUser) {
         try {
 
@@ -55,6 +62,7 @@ public class CreateUserPanel implements Initializable {
                     Pane root = loader.load(getClass().getResource("/CreateUserSuccessPanel.FXML").openStream());
                     CreateUserSuccessPanel createUserSuccessPanel = (CreateUserSuccessPanel) loader.getController();
                     userSuccessPanel.setTitle("Success!");
+                    userSuccessPanel.setResizable(false);
                     userSuccessPanel.setScene(new Scene(root));
                     userSuccessPanel.show();
                 }catch (Exception e){
@@ -71,6 +79,7 @@ public class CreateUserPanel implements Initializable {
                     Pane root = loader.load(getClass().getResource("/CreateUserErrorPanel.fxml").openStream());
                     CreateUserErrorPanel createUserErrorPanel = (CreateUserErrorPanel) loader.getController();
                     userErrorPanel.setTitle("Error!");
+                    userErrorPanel.setResizable(false);
                     userErrorPanel.setScene(new Scene(root));
                     userErrorPanel.show();
 

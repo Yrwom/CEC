@@ -61,7 +61,7 @@ public class AuthPanel implements Initializable {
                 System.out.println("Setting Title...");
                 navigationPanel.SetNavTitle(inputUsername.getText());
                 navPanel.setTitle("Navigation Panel");
-
+                navPanel.setResizable(false);
                 System.out.println("Setting Scene...");
                 navPanel.setScene(new Scene(root));
                 navPanel.show();
@@ -84,7 +84,7 @@ public class AuthPanel implements Initializable {
     public void CreateUser(ActionEvent userCreation) {
         try {
             System.out.println("Opening User Creation Panel...");
-            ((Node) userCreation.getSource()).getScene().getWindow().hide();
+
 
             System.out.println("Creating Stage...");
             Stage userPanel = new Stage();
@@ -97,7 +97,7 @@ public class AuthPanel implements Initializable {
 
             System.out.println("Setting Title...");
             userPanel.setTitle("User Creation Panel");
-
+            userPanel.setResizable(false);
             System.out.println("Setting Scene...");
             userPanel.setScene(new Scene(root));
 
@@ -120,7 +120,7 @@ public class AuthPanel implements Initializable {
             OfflineModePanel offlineOptionPanel = (OfflineModePanel) loader.getController();
 
             System.out.println("Setting Title...");
-
+            offlinePanel.setResizable(false);
             offlinePanel.setTitle("Settings  Panel");
 
             System.out.println("Setting Scene...");

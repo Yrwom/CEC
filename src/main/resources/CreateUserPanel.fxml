@@ -17,5 +17,6 @@
       <Button fx:id="createNewUser" layoutX="259.0" layoutY="436.0" mnemonicParsing="false" onAction="#NewUser" text="Create Account!" />
       <ComboBox fx:id="newRole" layoutX="231.0" layoutY="344.0" prefWidth="150.0" promptText="Click To View Roles" />
       <Label fx:id="usernameResponseCode" layoutX="225.0" layoutY="196.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
+      <Button fx:id="closeUserCreation" layoutX="534.0" layoutY="14.0" mnemonicParsing="false" onAction="#CloseUserCreationPanel" text="Abort" textAlignment="CENTER" />
    </children>
 </AnchorPane>

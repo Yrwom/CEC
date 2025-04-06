@@ -13,6 +13,7 @@ public class Main extends Application{
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/AuthPanel.fxml"));
             primaryStage.setTitle("User Authorization");
+            primaryStage.setResizable(false);
             primaryStage.setScene(new Scene(root));
             primaryStage.show();
 
