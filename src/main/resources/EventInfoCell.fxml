@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane prefHeight="316.0" prefWidth="252.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="106.0" layoutY="14.0" text="eventName" />
+      <Label layoutX="14.0" layoutY="39.0" text="Creator:" />
+      <Label layoutX="14.0" layoutY="70.0" text="Start Date:" />
+      <Label layoutX="14.0" layoutY="96.0" text="End Date:" />
+      <Label layoutX="14.0" layoutY="132.0" text="Participants:" />
+      <Label layoutX="14.0" layoutY="170.0" text="Location:" />
+      <Label layoutX="14.0" layoutY="197.0" text="Type:" />
+      <Label layoutX="10.0" layoutY="226.0" text="Voting:" />
+      <Label layoutX="10.0" layoutY="257.0" text="Description:" />
+      <RadioButton layoutX="178.0" layoutY="39.0" mnemonicParsing="false" text="No!">
+         <toggleGroup>
+            <ToggleGroup fx:id="Vote" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton layoutX="178.0" layoutY="61.0" mnemonicParsing="false" text="Yes!" toggleGroup="$Vote" />
+      <Label layoutX="208.0" layoutY="14.0" text="Vote!" />
+   </children>
+</Pane>

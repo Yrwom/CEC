@@ -41,7 +41,7 @@
             </Label>
          </children>
       </Pane>
-      <GridPane fx:id="calendarBase" gridLinesVisible="true" layoutX="360.0" layoutY="235.0" prefHeight="781.0" prefWidth="1200.0">
+      <GridPane fx:id="calendarBase" layoutX="360.0" layoutY="235.0" prefHeight="781.0" prefWidth="1200.0" style="-fx-border-width: 2px; -fx-border-color: black;">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -130,5 +130,6 @@
       </Label>
       <Button fx:id="monthBackwards" layoutX="834.0" layoutY="105.0" mnemonicParsing="false" onAction="#MonthBackward" text="&lt;" />
       <Button fx:id="monthForward" layoutX="1060.0" layoutY="105.0" mnemonicParsing="false" onAction="#MonthForward" text="&gt;" />
+      <Button layoutX="1508.0" layoutY="106.0" mnemonicParsing="false" onAction="#RefreshButton" text="Refresh!" textAlignment="CENTER" />
    </children>
 </AnchorPane>

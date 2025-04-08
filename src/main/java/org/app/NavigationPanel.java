@@ -40,9 +40,12 @@ public class NavigationPanel implements Initializable {
     private Label currentMonth;
     @FXML
     private GridPane calendarBase;
+    @FXML
+    private Button refreshButton;
 
     //varibles for calendar creation
     private YearMonth dateFocus;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -64,6 +67,10 @@ public class NavigationPanel implements Initializable {
 
         createCalendar(dateFocus);
     }
+    public void RefreshButton(ActionEvent resetButton){
+        dateFocus = YearMonth.now();
+        createCalendar(dateFocus);
+    }
     public void createCalendar(YearMonth yearMonth){
 
         currentMonth.setText(String.valueOf(dateFocus.getMonth()+ " " + (String.valueOf(dateFocus.getYear()))));
@@ -72,11 +79,11 @@ public class NavigationPanel implements Initializable {
        int dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
        int dayOffset = dayOfWeek % 7;
        int daysInMonth = yearMonth.lengthOfMonth();
+       int calendarCellTotal = 42;
 
        if((dateFocus.getYear() & 4) !=0 && daysInMonth == 29){
            daysInMonth = 28;
        }
-
        for(int i = 0; i < dayOffset; i++){
            try {
                FXMLLoader loader = new FXMLLoader(getClass().getResource("/BlankCell.fxml"));
@@ -87,6 +94,7 @@ public class NavigationPanel implements Initializable {
                e.printStackTrace();
            }
            }
+
         int totalCells = dayOffset + daysInMonth;
         int remainder = totalCells % 7;
         if(remainder != 0) {
@@ -105,6 +113,8 @@ public class NavigationPanel implements Initializable {
         }
 
        for(int day = 1; day <= daysInMonth; day++){
+           LocalDate currentDate = yearMonth.atDay(day);
+           //System.out.println(currentDate);
            int dayIndex = day - 1;
            int cellIndex = dayIndex + dayOffset;
            int col = cellIndex % 7;
@@ -116,7 +126,7 @@ public class NavigationPanel implements Initializable {
 
                DayCell dayController = loader.getController();
                dayController.setDayNumber(yearMonth.atDay(day));
-
+               dayController.PopulateDayCell(currentDate);
                calendarBase.add(dayCell, col, row);
            }catch (Exception e){
                e.printStackTrace();

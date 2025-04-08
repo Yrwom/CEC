@@ -27,6 +27,7 @@ import javafx.scene.paint.Color;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ResourceBundle;
 
 public class EventCreationPanel implements Initializable {
@@ -55,6 +56,8 @@ public class EventCreationPanel implements Initializable {
     private Label statusLabel;
 
     private int maxParticipants = 1;
+
+    private YearMonth dateFocus = YearMonth.now();
 
 
     @Override
@@ -116,6 +119,7 @@ public class EventCreationPanel implements Initializable {
                }));
                countDown.setCycleCount(5);
                countDown.play();
+
             }else {
                 statusLabel.setTextFill(EventCreationService.getStatusLabelColor());
                 System.out.println(EventCreationService.getResponseCode());

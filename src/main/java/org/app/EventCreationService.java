@@ -2,6 +2,7 @@ package org.app;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import javafx.scene.paint.Color;
@@ -136,6 +137,7 @@ public class EventCreationService {
                 System.out.println("A new Event was inserted successfully!");
                 EventCreationService.setResponseCode("Event Created Successfully, window closing in 5 seconds.");
                 setStatusLabelColor(Color.GREEN);
+
                 return true;
             }
         }catch(Exception e){
@@ -161,6 +163,7 @@ public class EventCreationService {
         }
 
     }
+
         }
 
 

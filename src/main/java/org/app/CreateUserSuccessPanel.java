@@ -36,7 +36,6 @@ public class CreateUserSuccessPanel implements Initializable {
             Pane root = loader.load(getClass().getResource("/AuthPanel.fxml").openStream());
             AuthPanel.setTitle("Auth Panel");
             AuthPanel.setScene(new Scene(root));
-            AuthPanel.show();
 
 
         }catch(Exception e){

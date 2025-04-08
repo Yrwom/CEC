@@ -12,6 +12,7 @@
 
 <AnchorPane prefHeight="837.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.app.EventCreationPanel">
    <children>
+
       <Button fx:id="eventClose" layoutX="539.0" layoutY="14.0" mnemonicParsing="false" onAction="#CloseEventCreationPanel" text="Abort" textAlignment="CENTER" textFill="#e61313" />
       <Label alignment="TOP_CENTER" contentDisplay="TOP" layoutX="217.0" layoutY="17.0" prefHeight="44.0" prefWidth="146.0" text="Event Creator" wrapText="true">
          <font>
