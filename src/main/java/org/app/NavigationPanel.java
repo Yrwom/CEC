@@ -74,66 +74,47 @@ public class NavigationPanel implements Initializable {
     public void createCalendar(YearMonth yearMonth){
 
         currentMonth.setText(String.valueOf(dateFocus.getMonth()+ " " + (String.valueOf(dateFocus.getYear()))));
-       LocalDate firstOfMonth = yearMonth.atDay(1);
 
+        LocalDate firstOfMonth = yearMonth.atDay(1);
        int dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
        int dayOffset = dayOfWeek % 7;
        int daysInMonth = yearMonth.lengthOfMonth();
        int calendarCellTotal = 42;
+try {
+    for (int cellIndex = 0; cellIndex < calendarCellTotal; cellIndex++) {
 
-       if((dateFocus.getYear() & 4) !=0 && daysInMonth == 29){
-           daysInMonth = 28;
-       }
-       for(int i = 0; i < dayOffset; i++){
-           try {
-               FXMLLoader loader = new FXMLLoader(getClass().getResource("/BlankCell.fxml"));
-               Node BlankCell = loader.load();
-               BlankCell blankController = loader.getController();
-               calendarBase.add(BlankCell, i, 0);
-           }catch(Exception e){
-               e.printStackTrace();
-           }
-           }
+        int col = cellIndex % 7;
+        int row = cellIndex / 7;
+        Node cell;
 
-        int totalCells = dayOffset + daysInMonth;
-        int remainder = totalCells % 7;
-        if(remainder != 0) {
-            int blankFill = 7 - remainder;
-            int row = totalCells / 7;
-            for(int i = 0; i < blankFill; i++){
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/BlankCell.fxml"));
-                    Node blank = loader.load();
-                    BlankCell blankController = loader.getController();
-                    calendarBase.add(blank, remainder + i, row);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+        if (cellIndex < dayOffset || cellIndex >= dayOffset + daysInMonth) {
+            FXMLLoader blankLoader = new FXMLLoader((getClass().getResource("/BlankCell.fxml")));
+            cell = blankLoader.load();
+        }else {
+            int day = cellIndex - dayOffset + 1;
+            try {
+                FXMLLoader dayLoader = new FXMLLoader((getClass().getResource("/DayCell.fxml")));
+                cell = dayLoader.load();
+                LocalDate currentDate = yearMonth.atDay(day);
+                DayCell daycell = dayLoader.getController();
+                EventDAO.setCurrentDate(currentDate);
+                daycell.setDayNumber(yearMonth.atDay(day));
+                daycell.PopulateDayCell(currentDate);
+
+
+            }catch(Exception e){
+                e.printStackTrace();
+                FXMLLoader blankLoader = new FXMLLoader((getClass().getResource("/BlankCell.fxml")));
+                cell = blankLoader.load();
             }
+
         }
+        calendarBase.add(cell, col, row);
+    }
 
-       for(int day = 1; day <= daysInMonth; day++){
-           LocalDate currentDate = yearMonth.atDay(day);
-           //System.out.println(currentDate);
-           int dayIndex = day - 1;
-           int cellIndex = dayIndex + dayOffset;
-           int col = cellIndex % 7;
-           int row = cellIndex / 7;
-
-           try{
-               FXMLLoader loader = new FXMLLoader(getClass().getResource("/DayCell.fxml"));
-               Node dayCell = loader.load();
-
-               DayCell dayController = loader.getController();
-               dayController.setDayNumber(yearMonth.atDay(day));
-               dayController.PopulateDayCell(currentDate);
-               calendarBase.add(dayCell, col, row);
-           }catch (Exception e){
-               e.printStackTrace();
-           }
-       }
-
-
+}catch (Exception e){
+    e.printStackTrace();
+}
     }
     public void SetNavTitle(String inputUsername) {
 

@@ -61,4 +61,33 @@ public class Event {
     public String getCreator() {
         return eventCreator;
     }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public int getMaxParticipants() {
+        return maxParticipants;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public boolean getVotingStatus() {
+        return votingEnabled;
+    }
+
 }

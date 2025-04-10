@@ -7,7 +7,7 @@
 
 <Pane prefHeight="131.0" prefWidth="172.0" style="-fx-border-width: 2px; -fx-border-color: black;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.app.DayCell">
    <children>
-      <Button fx:id="exapndButton" layoutX="117.0" layoutY="96.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="41.0" text="More">
+      <Button fx:id="expandButton" layoutX="117.0" layoutY="96.0" mnemonicParsing="false" onAction="#ExpandDayCell" prefHeight="25.0" prefWidth="41.0" text="More">
          <font>
             <Font size="10.0" />
          </font>

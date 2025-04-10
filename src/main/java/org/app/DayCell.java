@@ -1,12 +1,17 @@
 package org.app;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import org.app.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-
-import java.awt.event.ActionEvent;
+import javafx.event.ActionEvent;
+//import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.net.URL;
@@ -31,7 +36,7 @@ public class DayCell implements Initializable {
     private Label event2Creator;
     @FXML
     private Button expandButton;
-
+    private LocalDate cellDate;
     private List<Event> allEvents;
 
     public void initialize(URL location, ResourceBundle resources){
@@ -39,49 +44,21 @@ public class DayCell implements Initializable {
 
     }
     public void setDayNumber(LocalDate date){
+       this.cellDate = date;
         dayNumber.setText(String.valueOf(date.getDayOfMonth()));
 
     }
-
-    public List<Event> fetchEventByDate(LocalDate currentDate){
-
-        List<Event> events = new ArrayList<>();
-
-        String query = "SELECT * FROM events WHERE startDate = ? ORDER BY created_at ASC";
-
-        try(Connection connection = SqliteConnection.Connector();
-            PreparedStatement preparedStatement = connection.prepareStatement(query)){
-
-            preparedStatement.setString(1, currentDate.toString());
-
-            try(ResultSet resultSet = preparedStatement.executeQuery()){
-                while (resultSet.next()){
-
-                    Event event = new Event();
-                    event.setTitle(resultSet.getString("eventName"));
-                    event.setStartDate(resultSet.getString("startDate"));
-                    event.setEndDate(resultSet.getString("endDate"));
-                    event.setMaxParticipants(resultSet.getInt("maxParticipants"));
-                    event.setLocation(resultSet.getString("location"));
-                    event.setEventType(resultSet.getString("eventType"));
-                    event.setEventDescription(resultSet.getString("eventDescription"));
-                    event.setVotingStatus(resultSet.getBoolean("votingEnabled"));
-                    event.setCreatedAt(resultSet.getString("created_at"));
-
-                    events.add(event);
-                }
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return events;
+    public LocalDate getCurrentDate(){
+        return this.cellDate;
     }
+
     public boolean PopulateDayCell(LocalDate currentDate){
-        List<Event> events = fetchEventByDate(currentDate);
+        List<Event> events = EventDAO.fetchEventByDate(currentDate);
 
         if(events != null && !events.isEmpty()){
+
             System.out.println("Event 1 should be printed");
-            Event firstEvent = events.get(0);
+            Event firstEvent = events.getFirst();
             System.out.println("Event 1 Name under this line");
             System.out.println(firstEvent.getTitle());
             event1Name.setText(firstEvent.getTitle());
@@ -100,6 +77,7 @@ public class DayCell implements Initializable {
             }
             return true;
         }else {
+           expandButton.setVisible(false);
             System.out.println("Evenything is set to null");
             event1Name.setText("");
             event1Creator.setText("");
@@ -110,6 +88,25 @@ public class DayCell implements Initializable {
 
     }
     public void ExpandDayCell(ActionEvent expandButton){
-
+        try {
+            List<Event> events = EventDAO.fetchEventByDate(cellDate);
+            System.out.println("Creating Stage...");
+            Stage expandedDayCell = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            System.out.println("Opening Stream...");
+            Pane root = loader.load(getClass().getResource("/ExpandedDayCell.fxml").openStream());
+            System.out.println("Loading Controller...");
+            ExpandedDayCell expandDayCell = (ExpandedDayCell) loader.getController();
+            expandDayCell.setEvents(events);
+            System.out.println("updateExapndedDay called");
+            System.out.println("Setting Title...");
+            expandedDayCell.setTitle("Expand Day Panel");
+            expandedDayCell.setResizable(false);
+            System.out.println("Setting Scene...");
+            expandedDayCell.setScene(new Scene(root));
+            expandedDayCell.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
