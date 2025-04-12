@@ -27,6 +27,7 @@ public class ExpandedDayCell implements Initializable {
     private static final int EVENTS_PER_PAGE = 4;
     private List<Event> events;
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources){
 
@@ -34,11 +35,13 @@ public class ExpandedDayCell implements Initializable {
     }
     public void setEvents(List<Event> events) {
         this.events = events;
+        System.out.println("ExpandedDayCell: Number of events = " + events.size());
         updateExpandedDay();
     }
     public List<Event> getEvents(){
         return events;
     }
+
 
 public void updateExpandedDay(){
         expandedBase.getChildren().clear();
@@ -47,22 +50,27 @@ public void updateExpandedDay(){
         int end = Math.min(start + EVENTS_PER_PAGE, events.size());
     System.out.println("Number of events: " + events.size());
         Node cell;
-        int col = 0;
-        int row;
+        int columns = 2;
+
         try {
             for (int i = start; i < end; i++) {
-            System.out.println("We are in for loop");
-                System.out.println("We are in for loop");
+
+               // System.out.println("We are in for loop");
                 FXMLLoader eventLoader = new FXMLLoader((getClass().getResource("/EventInfoCell.fxml")));
                 cell = eventLoader.load();
                 EventInfoCell eventInfoCell = eventLoader.getController();
-                System.out.println("Cell should load here");
+               // System.out.println("Cell should load here");
                 eventInfoCell.setEvents(this.events);
                 eventInfoCell.SetEventIndex(i);
                 eventInfoCell.PopulateExpandDay(i);
 
-                expandedBase.add(cell, col++, 0);
-                System.out.println("node added");
+
+                int localIndex = i - start;
+                int col = localIndex % columns;
+                int row = localIndex / columns;
+                expandedBase.add(cell, col, row);
+
+               // System.out.println("node added");
             }
                 leftArrow.setVisible(currentPage > 0);
                 rightArrow.setVisible(end < events.size());
@@ -77,9 +85,6 @@ public void updateExpandedDay(){
         }
         }
         public void PageRight(ActionEvent event){
-            DayCell dayCell = new DayCell();
-            LocalDate dateFocus = dayCell.getCurrentDate();
-            List<Event> events = EventDAO.fetchEventByDate(dateFocus);
             int totalPages = (int) Math.ceil(events.size() / (double) EVENTS_PER_PAGE);
             if( currentPage < totalPages - 1){
                 currentPage++;

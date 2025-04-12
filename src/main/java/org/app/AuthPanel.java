@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class AuthPanel implements Initializable {
@@ -42,6 +43,12 @@ public class AuthPanel implements Initializable {
     public void Login(ActionEvent login) {
         try {
             if (authService.isLogin(inputUsername.getText(), inputPassword.getText())) {
+                String enteredUsername = inputUsername.getText();
+                List<User> users = UserDAO.fetchUserByUsername(enteredUsername);
+                if(!users.isEmpty()){
+                    User currentUser = users.getFirst();
+                    UserSession.setCurrentUser(currentUser);
+                }
                 isConnected.setText("Login Success!");
                 System.out.println("Correct Login");
 
@@ -133,5 +140,9 @@ public class AuthPanel implements Initializable {
     public void CloseCEC(ActionEvent closeCEC){
             System.out.println("Closing CEC!");
             Platform.exit();
+    }
+    public void getUser(){
+        UserDAO.fetchUserByUsername(inputUsername.getText());
+
     }
 }

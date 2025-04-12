@@ -57,20 +57,24 @@ public class DayCell implements Initializable {
 
         if(events != null && !events.isEmpty()){
 
-            System.out.println("Event 1 should be printed");
+          //  System.out.println("Event 1 should be printed");
             Event firstEvent = events.getFirst();
-            System.out.println("Event 1 Name under this line");
+           List<User> userList = UserDAO.fetchUserByUserID(firstEvent.getUserID());
+           User creator = userList.getFirst();
+           // System.out.println("Event 1 Name under this line");
             System.out.println(firstEvent.getTitle());
             event1Name.setText(firstEvent.getTitle());
-            System.out.println("Event 1 Creator under this line");
-            System.out.println(firstEvent.getCreator());
-            event1Creator.setText(firstEvent.getCreator());
+          // System.out.println("Event 1 Creator under this line");
+            System.out.println(creator.getUsername());
+            event1Creator.setText(creator.getUsername());
 
             if(events.size() > 1){
-                System.out.println("Event 2 should be printed");
+             //   System.out.println("Event 2 should be printed");
                 Event secondEvent = events.get(1);
+                List<User> userListSecondSet = UserDAO.fetchUserByUserID(secondEvent.getUserID());
+                User creatorSecondSet = userListSecondSet.get(0);
                 event2Name.setText(secondEvent.getTitle());
-                event2Creator.setText(secondEvent.getCreator());
+                event2Creator.setText(creatorSecondSet.getUsername());
             } else {
                 event2Name.setText("");
                 event2Creator.setText("");
@@ -78,7 +82,7 @@ public class DayCell implements Initializable {
             return true;
         }else {
            expandButton.setVisible(false);
-            System.out.println("Evenything is set to null");
+         //   System.out.println("Evenything is set to null");
             event1Name.setText("");
             event1Creator.setText("");
             event2Name.setText("");

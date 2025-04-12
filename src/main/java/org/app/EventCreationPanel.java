@@ -34,6 +34,7 @@ public class EventCreationPanel implements Initializable {
     public EventCreationService eventCreationService = new EventCreationService();
     private String eventType;
     private Boolean votingStatus;
+    private int userID = UserSession.getUserID();
     @FXML
     private Button eventClose;
     @FXML
@@ -102,9 +103,10 @@ public class EventCreationPanel implements Initializable {
     }
     public void SubmitEvent(){
         try {
-            if(eventCreationService.NewEvent(inputEventName.getText(), inputStartDate.getValue(), inputEndDate.getValue(), maxParticipants, inputLocation.getText(), eventType, inputEventDescription.getText(), votingStatus)){
+            if(eventCreationService.NewEvent(inputEventName.getText(), inputStartDate.getValue(), inputEndDate.getValue(), maxParticipants, inputLocation.getText(), eventType, inputEventDescription.getText(), votingStatus, userID)){
                 statusLabel.setTextFill(Color.GREEN);
                 System.out.println("We are in SubmitEvent and passed. Check db");
+                System.out.println("userID: " + userID);
                final int [] secondsRemaining = {5};
 
                Timeline countDown = new Timeline(new KeyFrame(Duration.seconds(1), event ->{
