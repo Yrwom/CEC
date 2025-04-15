@@ -59,7 +59,7 @@ public class DayCell implements Initializable {
 
           //  System.out.println("Event 1 should be printed");
             Event firstEvent = events.getFirst();
-           List<User> userList = UserDAO.fetchUserByUserID(firstEvent.getUserID());
+           List<User> userList = UserDAO.fetchUserByUserID(firstEvent.getUserUUID());
            User creator = userList.getFirst();
            // System.out.println("Event 1 Name under this line");
             System.out.println(firstEvent.getTitle());
@@ -71,7 +71,7 @@ public class DayCell implements Initializable {
             if(events.size() > 1){
              //   System.out.println("Event 2 should be printed");
                 Event secondEvent = events.get(1);
-                List<User> userListSecondSet = UserDAO.fetchUserByUserID(secondEvent.getUserID());
+                List<User> userListSecondSet = UserDAO.fetchUserByUserID(secondEvent.getUserUUID());
                 User creatorSecondSet = userListSecondSet.get(0);
                 event2Name.setText(secondEvent.getTitle());
                 event2Creator.setText(creatorSecondSet.getUsername());

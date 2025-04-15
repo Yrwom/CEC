@@ -8,7 +8,7 @@ import java.util.List;
 
 public class UserDAO {
 
-    // Fetch users by username. Usually, usernames are unique so you may expect either an empty list or a list containing a single user.
+
     public static List<User> fetchUserByUsername(String username) {
         List<User> userList = new ArrayList<>();
         String query = "SELECT * FROM users WHERE username = ?";
@@ -21,7 +21,7 @@ public class UserDAO {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     User user = new User();
-                    user.setUserID(resultSet.getInt("userID"));
+                    user.setUserUUID(resultSet.getString("userUUID"));
                     user.setUsername(resultSet.getString("username"));
                     user.setPassword(resultSet.getString("password"));
                     user.setRole(resultSet.getString("role"));
@@ -35,19 +35,19 @@ public class UserDAO {
         return userList;
     }
 
-    public static List<User> fetchUserByUserID(int userID) {
+    public static List<User> fetchUserByUserID(String userUUID) {
         List<User> userList = new ArrayList<>();
-        String query = "SELECT * FROM users WHERE userID = ?";
+        String query = "SELECT * FROM users WHERE userUUID = ?";
 
         try (Connection connection = SqliteConnection.Connector();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setInt(1, userID);
+            preparedStatement.setString(1, userUUID);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     User user = new User();
-                    user.setUserID(resultSet.getInt("userID"));
+                    user.setUserUUID(resultSet.getString("userUUID"));
                     user.setUsername(resultSet.getString("username"));
                     user.setPassword(resultSet.getString("password"));
                     user.setRole(resultSet.getString("role"));

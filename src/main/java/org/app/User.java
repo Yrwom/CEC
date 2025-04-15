@@ -1,7 +1,7 @@
 package org.app;
 
 public class User {
-private  int userID;
+private  String userUUID;
 private  String username;
 private  String password;
 private  String role;
@@ -11,8 +11,8 @@ private  String role;
 
     }
     // Instance setter for userID
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserUUID(String userUUID) {
+        this.userUUID = userUUID;
     }
 
     // Instance setter for username (expects a String)
@@ -31,8 +31,8 @@ private  String role;
     }
 
     // Instance getter for userID
-    public int getUserID() {
-        return this.userID;
+    public String getUserUUID() {
+        return this.userUUID;
     }
 
     // Instance getter for username

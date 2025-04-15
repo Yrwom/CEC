@@ -54,7 +54,7 @@ public class EventInfoCell implements Initializable {
 
 
         Event event = events.get(eventIndex);
-        List<User> userList = UserDAO.fetchUserByUserID(event.getUserID());
+        List<User> userList = UserDAO.fetchUserByUserID(event.getUserUUID());
         if(!userList.isEmpty()) {
             User creator = userList.get(0);
             System.out.println("Event Index: " + eventIndex);

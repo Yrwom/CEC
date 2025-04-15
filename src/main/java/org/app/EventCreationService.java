@@ -51,7 +51,7 @@ public class EventCreationService {
         return statusLabelColor;
     }
 
-    public boolean NewEvent(String eventName, LocalDate startDate, LocalDate endDate, int maxParticipants, String location, String eventType, String eventDescription, Boolean votingStatus, int userID) {
+    public boolean NewEvent(String eventName, LocalDate startDate, LocalDate endDate, int maxParticipants, String location, String eventType, String eventDescription, Boolean votingStatus, String userID, String eventID) {
         System.out.println("Max Pass" + maxParticipants);
         System.out.println(eventName);
         System.out.println(startDate);
@@ -62,7 +62,7 @@ public class EventCreationService {
         System.out.println(eventDescription);
         System.out.println(votingStatus);
         System.out.println(userID);
-        String query = "INSERT INTO events(eventName,startDate,endDate,maxParticipants,location,eventType,eventDescription,votingEnabled,userID) values(?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO events(eventName,startDate,endDate,maxParticipants,location,eventType,eventDescription,votingEnabled,userUUID,eventUUID) values(?,?,?,?,?,?,?,?,?,?)";
 
         try (Connection connection = SqliteConnection.Connector()) {
 
@@ -133,6 +133,7 @@ public class EventCreationService {
             preparedStatement.setString(7, (eventDescription));
             preparedStatement.setString(8, String.valueOf(votingStatus));
             preparedStatement.setString(9, String.valueOf(userID));
+            preparedStatement.setString(10, (eventID));
 
             int rowsInserted = preparedStatement.executeUpdate();
             if (rowsInserted > 0) {

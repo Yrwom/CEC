@@ -1,5 +1,8 @@
 package org.app;
 import java.sql.*;
+import java.util.List;
+import java.util.Objects;
+
 public class AuthService {
 
     Connection connection;
@@ -62,15 +65,15 @@ public class AuthService {
     public boolean isValidPassword(String password){
         try {
             System.out.println("We are in isValidPassword");
-
+            System.out.println(password);
             String whiteSpaceRegex = ".*\\s.*";
             String digitRegex = ".*\\d.*";
             String specialCharacterRegex = ".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*";
-            if (password == null) {
+            if (Objects.equals(password,"")) {
                 System.out.println("Null Test");
-                AuthService.setResponseCode("Password is Null");
+                AuthService.setResponseCode("Password is Empty!");
                 return false;
-            } else if(password.matches(whiteSpaceRegex)){
+            }else if(password.matches(whiteSpaceRegex)){
                 System.out.println("Whitespace Test");
                 System.out.println(password);
                 AuthService.setResponseCode("Password has Whitespace");
@@ -96,21 +99,53 @@ public class AuthService {
         }
         return true;
         }
-    public boolean newUser(String username, String password, String role) {
-        String query = "INSERT INTO users(username,password,role) values(?,?,?)";
+
+        public boolean isValidUsername(String username){
+        try{
+            if(Objects.equals(username,"")){
+                AuthService.setResponseCode("Username must not be blank!");
+                return false;
+            }
+            List<User> userList = UserDAO.fetchUserByUsername(username);
+            if(!userList.isEmpty()){
+                AuthService.setResponseCode("Username already exists, please choose another!");
+                return false;
+            }else{
+                return true;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return true;
+        }
+        public boolean isValidRole(String role){
+        try{
+            if (role == null) {
+                System.out.println("Null Test");
+                AuthService.setResponseCode("Please Select a Role!");
+                return false;
+            }
+            }catch(Exception e){
+            e.printStackTrace();
+        }
+        return true;
+        }
+
+    public boolean newUser(String username, String password, String role, String userUUID) {
+        String query = "INSERT INTO users(userUUID,username,password,role) values(?,?,?,?)";
 
         try (Connection connection = SqliteConnection.Connector()){
 
                 if (connection == null) {
                     System.out.println("Failed to establish a database connection!");
                     return false;
-                }else if(isValidPassword(password)){
+                }else if(isValidPassword(password) && isValidUsername(username) && isValidRole(role)){
                     PreparedStatement preparedStatement = connection.prepareStatement(query);
                     System.out.println("We made it here");
-
-                    preparedStatement.setString(1, username);
-                    preparedStatement.setString(2, password);
-                    preparedStatement.setString(3, role);
+                    preparedStatement.setString(1, userUUID);
+                    preparedStatement.setString(2, username);
+                    preparedStatement.setString(3, password);
+                    preparedStatement.setString(4, role);
 
                     int rowsInserted = preparedStatement.executeUpdate();
                     if (rowsInserted > 0) {

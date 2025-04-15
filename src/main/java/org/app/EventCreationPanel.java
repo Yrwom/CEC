@@ -29,12 +29,14 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class EventCreationPanel implements Initializable {
     public EventCreationService eventCreationService = new EventCreationService();
     private String eventType;
     private Boolean votingStatus;
-    private int userID = UserSession.getUserID();
+    private String eventID = UUID.randomUUID().toString();
+    private String userUUID = UserSession.getUserUUID();
     @FXML
     private Button eventClose;
     @FXML
@@ -52,7 +54,7 @@ public class EventCreationPanel implements Initializable {
     @FXML
     private TextField inputLocation;
     @FXML
-    private TextField inputEventDescription;
+    private TextArea inputEventDescription;
     @FXML
     private Label statusLabel;
 
@@ -103,10 +105,10 @@ public class EventCreationPanel implements Initializable {
     }
     public void SubmitEvent(){
         try {
-            if(eventCreationService.NewEvent(inputEventName.getText(), inputStartDate.getValue(), inputEndDate.getValue(), maxParticipants, inputLocation.getText(), eventType, inputEventDescription.getText(), votingStatus, userID)){
+            if(eventCreationService.NewEvent(inputEventName.getText(), inputStartDate.getValue(), inputEndDate.getValue(), maxParticipants, inputLocation.getText(), eventType, inputEventDescription.getText(), votingStatus, userUUID, eventID)){
                 statusLabel.setTextFill(Color.GREEN);
                 System.out.println("We are in SubmitEvent and passed. Check db");
-                System.out.println("userID: " + userID);
+                System.out.println("userID: " + userUUID);
                final int [] secondsRemaining = {5};
 
                Timeline countDown = new Timeline(new KeyFrame(Duration.seconds(1), event ->{

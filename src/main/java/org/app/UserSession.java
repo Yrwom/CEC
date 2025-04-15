@@ -9,8 +9,8 @@ public class UserSession {
     public static User getCurrentUser(){
         return currentUser;
     }
-    public static int getUserID(){
-        return currentUser != null ? currentUser.getUserID() : -1;
+    public static String getUserUUID(){
+        return currentUser != null ? currentUser.getUserUUID() : null;
     }
 }
 

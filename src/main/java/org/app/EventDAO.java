@@ -29,7 +29,7 @@ private static LocalDate currentDate;
                     event.setEventDescription(resultSet.getString("eventDescription"));
                     event.setVotingStatus(resultSet.getBoolean("votingEnabled"));
                     event.setCreatedAt(resultSet.getString("created_at"));
-                    event.setUserID(resultSet.getInt("userID"));
+                    event.setUserUUID(resultSet.getString("userUUID"));
                     events.add(event);
                 }
             }

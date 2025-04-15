@@ -19,6 +19,7 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class CreateUserPanel implements Initializable {
     public AuthService authService = new AuthService();
@@ -32,6 +33,7 @@ public class CreateUserPanel implements Initializable {
     @FXML
     private Label userErrorMessage;
 
+    private String userUUID = UUID.randomUUID().toString();
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         newRole.getItems().addAll("Event Coordinator", "Participant", "Guest");
@@ -47,7 +49,7 @@ public class CreateUserPanel implements Initializable {
     public void NewUser(ActionEvent createNewUser) {
         try {
 
-            if (authService.newUser(newUsername.getText(), newPassword.getText(), newRole.getValue())){
+            if (authService.newUser(newUsername.getText(), newPassword.getText(), newRole.getValue(), userUUID)){
                 try {
                     System.out.println("We are in NewUser");
 
