@@ -22,6 +22,8 @@ public class ExpandedDayCell implements Initializable {
     private Button leftArrow;
     @FXML
     private Button rightArrow;
+    @FXML
+    private Button CloseExpandedDay;
 
     private int currentPage = 0;
     private static final int EVENTS_PER_PAGE = 4;
@@ -91,4 +93,7 @@ public void updateExpandedDay(){
                 updateExpandedDay();
         }
     }
+        public void CloseExpandedDay(ActionEvent event){
+            ((Node) event.getSource()).getScene().getWindow().hide();
+        }
 }

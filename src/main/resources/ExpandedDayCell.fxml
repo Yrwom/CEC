@@ -27,5 +27,6 @@
       </GridPane>
       <Button fx:id="leftArrow" layoutX="200.0" layoutY="12.0" mnemonicParsing="false" onAction="#PageLeft" text="&lt;" />
       <Button fx:id="rightArrow" layoutX="404.0" layoutY="12.0" mnemonicParsing="false" onAction="#PageRight" text="&gt;" />
+      <Button fx:id="CloseExpandedDay" layoutX="574.0" layoutY="12.0" mnemonicParsing="false" onAction="#CloseExpandedDay" text="Close" />
    </children>
 </Pane>

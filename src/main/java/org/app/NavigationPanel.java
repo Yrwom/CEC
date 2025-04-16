@@ -17,6 +17,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import static javax.swing.UIManager.get;
@@ -42,6 +43,10 @@ public class NavigationPanel implements Initializable {
     private GridPane calendarBase;
     @FXML
     private Button refreshButton;
+    @FXML
+    private Label CurrentRole;
+    @FXML
+    private Label CurrentRoleFlavorText;
 
     //varibles for calendar creation
     private YearMonth dateFocus;
@@ -53,6 +58,16 @@ public class NavigationPanel implements Initializable {
         dateFocus = YearMonth.now();
 
         createCalendar(dateFocus);
+        User currentUser = UserSession.getCurrentUser();
+        if(!Objects.equals(currentUser.getRole(),"Event Coordinator")){
+            createEvent.setVisible(false);
+            CurrentRoleFlavorText.setText("You are currently logged in as a:      ");
+            CurrentRole.setText(currentUser.getRole());
+        }else{
+            CurrentRoleFlavorText.setText("You are currently logged in as an:      ");
+            CurrentRole.setText(currentUser.getRole());
+        }
+
 
     }
 

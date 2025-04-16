@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.Pane?>
 
 <Pane fx:id="eventPane" prefHeight="337.0" prefWidth="260.0" style="-fx-border-image-width: 2px; -fx-border-color: black;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.app.EventInfoCell">
    <children>
-      <Label fx:id="eventName" layoutX="106.0" layoutY="14.0" text="eventName" />
+      <Label fx:id="eventName" layoutX="25.0" layoutY="15.0" text="eventName" />
       <Label layoutX="7.0" layoutY="39.0" text="Creator:" />
       <Label layoutY="70.0" text="Start Date:" />
       <Label layoutX="3.0" layoutY="96.0" text="End Date:" />
@@ -16,13 +18,16 @@
       <Label layoutX="2.0" layoutY="197.0" text="Type:" />
       <Label layoutX="9.0" layoutY="225.0" text="Voting:" />
       <Label layoutX="3.0" layoutY="257.0" text="Description:" />
-      <RadioButton layoutX="190.0" layoutY="36.0" mnemonicParsing="false" text="No!">
+      <Group fx:id="Vote">
+         <RadioButton fx:id="VoteNo" layoutX="190.0" layoutY="36.0" mnemonicParsing="false" onMouseClicked="#VotedNo" text="No!" toggleGroup="$VoteToggle">
          <toggleGroup>
-            <ToggleGroup fx:id="Vote" />
+            <ToggleGroup fx:id="VoteToggle" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton layoutX="190.0" layoutY="58.0" mnemonicParsing="false" text="Yes!" toggleGroup="$Vote" />
-      <Label layoutX="197.0" layoutY="15.0" text="Vote!" />
+         <RadioButton fx:id="VoteYes" layoutX="190.0" layoutY="58.0" mnemonicParsing="false" onMouseClicked="#VotedYes" text="Yes!" toggleGroup="$VoteToggle" />
+         <Label layoutX="197.0" layoutY="15.0" text="Vote!" />
+      </Group>
+
       <Label fx:id="eventCreator" layoutX="92.0" layoutY="39.0" prefHeight="17.0" prefWidth="74.0" text="Label" />
       <Label fx:id="eventStartDate" layoutX="97.0" layoutY="70.0" prefHeight="17.0" prefWidth="74.0" text="Label" />
       <Label fx:id="eventEndDate" layoutX="97.0" layoutY="96.0" prefHeight="17.0" prefWidth="74.0" text="Label" />
@@ -31,5 +36,12 @@
       <Label fx:id="eventType" layoutX="97.0" layoutY="197.0" prefHeight="17.0" prefWidth="74.0" text="Label" />
       <Label fx:id="eventVoting" layoutX="97.0" layoutY="225.0" prefHeight="17.0" prefWidth="74.0" text="Label" />
       <Label fx:id="eventDescription" layoutX="8.0" layoutY="274.0" prefHeight="61.0" prefWidth="245.0" text="Label" />
+      <TextArea fx:id="voteResponseBox" editable="false" layoutX="174.0" layoutY="17.0" prefHeight="107.0" prefWidth="74.0" style="-fx-border-color: black;" text="You have already voted on this Event!" wrapText="true" />
+      <Group fx:id="VoteCountGroup" layoutX="181.0" layoutY="179.0" />
+      <Label fx:id="YesCount" layoutX="201.0" layoutY="233.0" text="NA" />
+      <Label fx:id="NoCount" layoutX="201.0" layoutY="203.0" text="NA" />
+      <Label layoutX="170.0" layoutY="178.0" text="Vote Count" />
+      <Label layoutX="170.0" layoutY="232.0" text="Yes:" />
+      <Label layoutX="169.0" layoutY="203.0" text="No:" />
    </children>
 </Pane>
