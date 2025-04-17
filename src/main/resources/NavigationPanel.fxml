@@ -132,5 +132,6 @@
             <Button fx:id="Logout" mnemonicParsing="false" onAction="#Logout" text="Logout" textAlignment="CENTER" />
          </children>
       </HBox>
+      <Button fx:id="viewMyEvents" layoutX="60.0" layoutY="25.0" mnemonicParsing="false" onAction="#OpenMyEvents" text="View My Events" textAlignment="CENTER" />
    </children>
 </AnchorPane>

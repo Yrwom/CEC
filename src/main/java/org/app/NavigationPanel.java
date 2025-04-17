@@ -17,6 +17,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -84,7 +85,9 @@ public class NavigationPanel implements Initializable {
     }
     public void RefreshButton(ActionEvent resetButton){
         dateFocus = YearMonth.now();
+        calendarBase.getChildren().clear();
         createCalendar(dateFocus);
+
     }
     public void createCalendar(YearMonth yearMonth){
 
@@ -159,14 +162,10 @@ try {
             System.out.println("Creating Stage...");
             Stage eventPanel = new Stage();
             FXMLLoader loader = new FXMLLoader();
-
             System.out.println("Opening Stream...");
             Pane root = loader.load(getClass().getResource("/EventCreationPanel.fxml").openStream());
             System.out.println("Loading Controller...");
-            EventCreationPanel eventCreationPanel = (EventCreationPanel) loader.getController();
-
             System.out.println("Setting Title...");
-
             eventPanel.setTitle("Event Creation Panel");
             eventPanel.setResizable(false);
             System.out.println("Setting Scene...");
@@ -217,6 +216,28 @@ try {
             System.out.println("Setting Scene...");
             syncPanel.setScene(new Scene(root));
             syncPanel.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void OpenMyEvents(ActionEvent openMyEvents){
+        try {
+            String userUUID = UserSession.getUserUUID();
+            List<Event> events = EventDAO.fetchEventByUserUUID(userUUID);
+            System.out.println("Creating Stage...");
+            Stage viewMyEventsPanel = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            System.out.println("Opening Stream...");
+            Pane root = loader.load(getClass().getResource("/ViewMyEventsPanel.fxml").openStream());
+            System.out.println("Loading Controller...");
+            ViewMyEventsPanel myEventsPanel = (ViewMyEventsPanel) loader.getController();
+            myEventsPanel.setEvents(events);
+            System.out.println("Setting Title...");
+            viewMyEventsPanel.setTitle("My Events Panel");
+            viewMyEventsPanel.setResizable(false);
+            System.out.println("Setting Scene...");
+            viewMyEventsPanel.setScene(new Scene(root));
+            viewMyEventsPanel.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

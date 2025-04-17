@@ -82,7 +82,7 @@ public class DayCell implements Initializable {
             return true;
         }else {
            expandButton.setVisible(false);
-         //   System.out.println("Evenything is set to null");
+         //   System.out.println("Evenything is set to blank");
             event1Name.setText("");
             event1Creator.setText("");
             event2Name.setText("");

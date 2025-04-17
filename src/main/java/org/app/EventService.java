@@ -2,12 +2,12 @@ package org.app;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDate;
 import javafx.scene.paint.Color;
 
-public class EventCreationService {
+public class EventService {
 
     Connection connection;
     public static String responseCode;
@@ -16,7 +16,7 @@ public class EventCreationService {
     public static Color statusLabelColor;
 
 
-    public EventCreationService() {
+    public EventService() {
         connection = SqliteConnection.Connector();
         if (connection == null)
 
@@ -72,38 +72,38 @@ public class EventCreationService {
                 return false;
             }
             if (eventName.isEmpty()) {
-                EventCreationService.setResponseCode("Event Name Cannot be empty!");
+                EventService.setResponseCode("Event Name Cannot be empty!");
                 setStatusLabelColor(Color.RED);
                 return false;
             }
             if (startDate == null) {
 
-                EventCreationService.setResponseCode("Start Date Cannot be empty!");
+                EventService.setResponseCode("Start Date Cannot be empty!");
                 setStatusLabelColor(Color.RED);
                 return false;
             }
             if (endDate == null) {
-                EventCreationService.setResponseCode("End Date Cannot be empty!");
+                EventService.setResponseCode("End Date Cannot be empty!");
                 setStatusLabelColor(Color.RED);
                 return false;
             }
             if(dateCompareResultInt == -1){
-                EventCreationService.setResponseCode("End Date must be the same or later than the start date!");
+                EventService.setResponseCode("End Date must be the same or later than the start date!");
                 setStatusLabelColor(Color.RED);
                 return false;
             }
             if (location.isEmpty()) {
-                EventCreationService.setResponseCode("Event must have a location!");
+                EventService.setResponseCode("Event must have a location!");
                 setStatusLabelColor(Color.RED);
                 return false;
             }
             if (eventType == null) {
-                EventCreationService.setResponseCode(("Please select an event type!"));
+                EventService.setResponseCode(("Please select an event type!"));
                 setStatusLabelColor(Color.RED);
                 return false;
             }
             if (votingStatus == null) {
-                EventCreationService.setResponseCode("Please select a voting option!");
+                EventService.setResponseCode("Please select a voting option!");
                 setStatusLabelColor(Color.RED);
                 return false;
             }
@@ -138,7 +138,7 @@ public class EventCreationService {
             int rowsInserted = preparedStatement.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("A new Event was inserted successfully!");
-                EventCreationService.setResponseCode("Event Created Successfully, window closing in 5 seconds.");
+                EventService.setResponseCode("Event Created Successfully, window closing in 5 seconds.");
                 setStatusLabelColor(Color.GREEN);
 
                 return true;
@@ -150,6 +150,53 @@ public class EventCreationService {
 
         return false;
         }
+
+    public boolean EditEvent(String eventName, LocalDate startDate, LocalDate endDate, int maxParticipants, String location, String eventType, String eventDescription, Boolean votingStatus, String eventUUID) {
+        String query = "UPDATE events SET " +
+                "eventName = COALESCE(?,eventName)," +
+                "startDate = COALESCE(?,startDate)," +
+                "endDate = COALESCE(?,endDate)," +
+                "maxParticipants = COALESCE(?,maxParticipants)," +
+                "location = COALESCE(?,location)," +
+                "eventType = COALESCE(?,eventType)," +
+                "eventDescription = COALESCE(?,eventDescription)," +
+                "votingEnabled = COALESCE(?,votingEnabled)" +
+                "WHERE eventUUID = ?;";
+        try (Connection connection = SqliteConnection.Connector();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+           if(eventName == null) ps.setNull(1, Types.VARCHAR);
+           else                  ps.setString(1, eventName);
+           if(startDate == null) ps.setNull(2, Types.DATE);
+           else                  ps.setString(2, String.valueOf(startDate));
+           if(endDate == null)   ps.setNull(3, Types.DATE);
+           else                  ps.setString(3,String.valueOf(endDate));
+           ps.setString(4, String.valueOf(maxParticipants));
+           if(location == null)  ps.setNull(5, Types.VARCHAR);
+           else                  ps.setString(5,location);
+           if(eventType == null) ps.setNull(6, Types.VARCHAR);
+           else                  ps.setString(6,eventType);
+           if(eventDescription == null) ps.setNull(7,Types.VARCHAR);
+           else                  ps.setString(7, eventDescription);
+           if(votingStatus == null) ps.setNull(8, Types.VARCHAR);
+           else                  ps.setString(8, String.valueOf(votingStatus));
+           ps.setString(9, eventUUID);
+
+            int rowsInserted = ps.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("A new Event was updated successfully!");
+                EventService.setResponseCode("Event Edited Successfully, window closing in 5 seconds.");
+                setStatusLabelColor(Color.GREEN);
+
+                return true;
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean DateCompare(LocalDate startDate, LocalDate endDate){
         int dateCompare;
 

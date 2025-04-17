@@ -1,38 +1,28 @@
 package org.app;
 
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
-import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.w3c.dom.Text;
-import javax.swing.*;
 import javafx.scene.paint.Color;
-import java.awt.event.ActionListener;
+
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
 public class EventCreationPanel implements Initializable {
-    public EventCreationService eventCreationService = new EventCreationService();
+    public EventService eventService = new EventService();
     private String eventType;
     private Boolean votingStatus;
     private String eventID = UUID.randomUUID().toString();
@@ -105,7 +95,7 @@ public class EventCreationPanel implements Initializable {
     }
     public void SubmitEvent(){
         try {
-            if(eventCreationService.NewEvent(inputEventName.getText(), inputStartDate.getValue(), inputEndDate.getValue(), maxParticipants, inputLocation.getText(), eventType, inputEventDescription.getText(), votingStatus, userUUID, eventID)){
+            if(eventService.NewEvent(inputEventName.getText(), inputStartDate.getValue(), inputEndDate.getValue(), maxParticipants, inputLocation.getText(), eventType, inputEventDescription.getText(), votingStatus, userUUID, eventID)){
                 statusLabel.setTextFill(Color.GREEN);
                 System.out.println("We are in SubmitEvent and passed. Check db");
                 System.out.println("userID: " + userUUID);
@@ -125,18 +115,13 @@ public class EventCreationPanel implements Initializable {
                countDown.play();
 
             }else {
-                statusLabel.setTextFill(EventCreationService.getStatusLabelColor());
-                System.out.println(EventCreationService.getResponseCode());
-                eventResponseCode.setText(EventCreationService.getResponseCode());
+                statusLabel.setTextFill(EventService.getStatusLabelColor());
+                System.out.println(EventService.getResponseCode());
+                eventResponseCode.setText(EventService.getResponseCode());
             }
         }catch(Exception e){
             e.printStackTrace();
         }
     }
-    public void DateCheck(){
-        if(!eventCreationService.DateCompare(inputStartDate.getValue(), inputEndDate.getValue())) {
-            EventCreationService.setResponseCode("End Date must be the same or later than the start date!");
-            eventResponseCode.setText(EventCreationService.getResponseCode());
-        }
-        }
+
     }

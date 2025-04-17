@@ -1,23 +1,26 @@
 package org.app;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.time.YearMonth;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class EventInfoCell implements Initializable {
+public class MyEventsInfoCell implements Initializable {
     @FXML
     private Label eventName;
     @FXML
@@ -55,19 +58,23 @@ public class EventInfoCell implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-            voteResponseBox.setVisible(false);
+        voteResponseBox.setVisible(false);
 
     }
     public void setEvents(List<Event> events) {
         System.out.println("EventInfoCell: Number of events = " + events.size());
         this.events = events;
     }
-
-
+    public void setCurrentEvent(Event currentEvent){
+        this.currentEvent = currentEvent;
+    }
+    public Event getCurrentEvent(){
+        return currentEvent;
+    }
     public void SetEventIndex(int index) {
         eventIndex = index;
     }
-    public void PopulateExpandDay(int eventIndex){
+    public void PopulateMyEvents(int eventIndex){
         Vote.setVisible(false);
         if (events == null || events.size() <= eventIndex) {
             System.out.println("Event list is not properly set or index is out of range.");
@@ -86,8 +93,8 @@ public class EventInfoCell implements Initializable {
         if(!userList.isEmpty()) {
             User creator = userList.get(0);
             if(event.getVotingStatus()){
-                    System.out.println("we are in voting status check");
-                    Vote.setVisible(true);
+                System.out.println("we are in voting status check");
+                Vote.setVisible(true);
             }
             checkHasVoted();
 
@@ -167,7 +174,7 @@ public class EventInfoCell implements Initializable {
         }
 
     }
-public void checkHasVoted(){
+    public void checkHasVoted(){
         if(currentEvent == null)return;
         String eventUUID = currentEvent.getEventUUID();
         String userUUID = UserSession.getUserUUID();
@@ -181,5 +188,30 @@ public void checkHasVoted(){
         }else {
             Vote.setVisible(true);
         }
-}
+    }
+    public void OpenEventEditPanel(ActionEvent openEventEditor){
+        try {
+
+            Stage eventPanel = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/EventEditPanel.fxml"));
+            Pane root = loader.load();
+            EventEditorPanel eventEditorPanel = loader.getController();
+
+            eventEditorPanel.setCurrentEvent(this.currentEvent);
+
+
+            eventPanel.setTitle("Event Creation Panel");
+            eventPanel.setResizable(false);
+            eventPanel.setScene(new Scene(root));
+            System.out.println("Creating Stage...");
+            System.out.println("Opening Stream...");
+            System.out.println("Loading Controller...");
+            System.out.println("Setting Title...");
+            System.out.println("Setting Scene...");
+
+            eventPanel.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
