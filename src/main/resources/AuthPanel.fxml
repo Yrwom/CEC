@@ -18,7 +18,7 @@
             <Font size="16.0" />
          </font>
       </TextField>
-      <Button fx:id="loginExecute" layoutX="270.0" layoutY="247.0" mnemonicParsing="false" onAction="#Login" text="Login">
+      <Button fx:id="loginExecute" layoutX="171.0" layoutY="246.0" mnemonicParsing="false" onAction="#Login" text="Login">
          <font>
             <Font size="16.0" />
          </font></Button>
@@ -38,5 +38,10 @@
       </Label>
       <Button fx:id="offlineMode" layoutX="17.0" layoutY="14.0" mnemonicParsing="false" onAction="#OpenOffline" text="Offline Mode" textAlignment="CENTER" />
       <Button fx:id="closeCEC" layoutX="534.0" layoutY="14.0" mnemonicParsing="false" onAction="#CloseCEC" text="Exit :(" textAlignment="CENTER" />
+      <Button fx:id="forgotPassword" layoutX="283.0" layoutY="246.0" mnemonicParsing="false" onAction="#OpenForgotPassword" text="Forgot Password?">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

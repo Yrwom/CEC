@@ -182,8 +182,8 @@ public class EventService {
            else                  ps.setString(8, String.valueOf(votingStatus));
            ps.setString(9, eventUUID);
 
-            int rowsInserted = ps.executeUpdate();
-            if (rowsInserted > 0) {
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated > 0) {
                 System.out.println("A new Event was updated successfully!");
                 EventService.setResponseCode("Event Edited Successfully, window closing in 5 seconds.");
                 setStatusLabelColor(Color.GREEN);
@@ -196,6 +196,7 @@ public class EventService {
         }
         return false;
     }
+    // on hold until central db is set up public boolean DeleteEvent(String eventUUID)
 
     public boolean DateCompare(LocalDate startDate, LocalDate endDate){
         int dateCompare;

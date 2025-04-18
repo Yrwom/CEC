@@ -160,7 +160,41 @@ public class AuthService {
             }
             return false;
         }
+public boolean ForgotPassword(String userUUID, String newPassword){
+        String query =  "UPDATE users SET " +
+                        "password = ? " +
+                        "WHERE userUUID = ?;";
 
+        try(Connection connection = SqliteConnection.Connector()){
+            if (connection == null) {
+                System.out.println("Failed to establish a database connection!");
+                return false;
+            }else if(isValidPassword(newPassword)){
+                PreparedStatement ps = connection.prepareStatement(query);
+                ps.setString(1,newPassword);
+                ps.setString(2,userUUID);
+
+                int rowUpdated = ps.executeUpdate();
+                if(rowUpdated > 0){
+                    setResponseCode("Password Updated Sec");
+                    return true;
+                } else{
+                    return false;
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+}
+public boolean ConfirmNewPasswordMatch(String newpassword,String confirmedPassword){
+    if(Objects.equals(newpassword, confirmedPassword)){
+        return true;
+    }else {
+        setResponseCode("Passwords do not match, please check.");
+        return false;
+    }
+}
 
 
     }

@@ -141,8 +141,30 @@ public class AuthPanel implements Initializable {
             System.out.println("Closing CEC!");
             Platform.exit();
     }
-    public void getUser(){
-        UserDAO.fetchUserByUsername(inputUsername.getText());
+   public void OpenForgotPassword(ActionEvent forgotPassword){
+       try {
+           System.out.println("Opening User Creation Panel...");
 
-    }
+
+           System.out.println("Creating Stage...");
+           Stage forgotPassPanel = new Stage();
+           FXMLLoader loader = new FXMLLoader();
+
+           System.out.println("Opening Stream...");
+           Pane root = loader.load(getClass().getResource("/ForgotPasswordPanel.fxml").openStream());
+           System.out.println("Loading Controller...");
+           ForgotPasswordPanel forgotPasswordPanel = (ForgotPasswordPanel) loader.getController();
+
+           System.out.println("Setting Title...");
+           forgotPassPanel.setTitle("User Creation Panel");
+           forgotPassPanel.setResizable(false);
+           System.out.println("Setting Scene...");
+           forgotPassPanel.setScene(new Scene(root));
+
+           System.out.println("Displaying Panel...");
+           forgotPassPanel.show();
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+   }
 }
