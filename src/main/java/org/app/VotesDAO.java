@@ -14,8 +14,8 @@ public class VotesDAO {
 
         String yesQuery = "SELECT COUNT(*) AS yesCount FROM votes WHERE eventID = ? AND voteValue = 1";
 
-        try (Connection connection = SqliteConnection.Connector();
-            PreparedStatement prsmt = connection.prepareStatement(yesQuery)){
+        try (Connection connection = LocalSqliteConnection.Connector();
+             PreparedStatement prsmt = connection.prepareStatement(yesQuery)){
 
             prsmt.setString(1, eventUUID);
             try(ResultSet resultSet = prsmt.executeQuery()){
@@ -30,7 +30,7 @@ public class VotesDAO {
         }
         String noQuery = "SELECT COUNT(*) AS noCount FROM votes WHERE eventID = ? AND voteValue = 0";
 
-        try (Connection connection = SqliteConnection.Connector();
+        try (Connection connection = LocalSqliteConnection.Connector();
              PreparedStatement prsmt = connection.prepareStatement(noQuery)){
 
             prsmt.setString(1, eventUUID);
@@ -47,7 +47,7 @@ public class VotesDAO {
     }
     public static boolean HasVotedCheck(String eventUUID, String userUUID){
         String query = "SELECT 1 FROM votes WHERE eventID = ? AND userID = ? LIMIT 1";
-        try(Connection connection = SqliteConnection.Connector();
+        try(Connection connection = LocalSqliteConnection.Connector();
             PreparedStatement prstm = connection.prepareStatement(query)){
             prstm.setString(1,eventUUID);
             prstm.setString(2,userUUID);

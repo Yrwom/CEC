@@ -13,7 +13,7 @@ public class UserDAO {
         List<User> userList = new ArrayList<>();
         String query = "SELECT * FROM users WHERE username = ?";
 
-        try (Connection connection = SqliteConnection.Connector();
+        try (Connection connection = LocalSqliteConnection.Connector();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, username);
@@ -25,6 +25,8 @@ public class UserDAO {
                     user.setUsername(resultSet.getString("username"));
                     user.setPassword(resultSet.getString("password"));
                     user.setRole(resultSet.getString("role"));
+                    user.setFontColor(resultSet.getString("font_color"));
+                    user.setFontFamily(resultSet.getString("font_style"));
                     userList.add(user);
                 }
             }
@@ -39,7 +41,7 @@ public class UserDAO {
         List<User> userList = new ArrayList<>();
         String query = "SELECT * FROM users WHERE userUUID = ?";
 
-        try (Connection connection = SqliteConnection.Connector();
+        try (Connection connection = LocalSqliteConnection.Connector();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, userUUID);
@@ -51,6 +53,8 @@ public class UserDAO {
                     user.setUsername(resultSet.getString("username"));
                     user.setPassword(resultSet.getString("password"));
                     user.setRole(resultSet.getString("role"));
+                    user.setFontColor(resultSet.getString("font_color"));
+                    user.setFontFamily(resultSet.getString("font_style"));
                     userList.add(user);
                 }
             }

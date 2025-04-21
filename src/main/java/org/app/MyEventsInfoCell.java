@@ -126,7 +126,7 @@ public class MyEventsInfoCell implements Initializable {
         String userUUID = UserSession.getUserUUID();
         String query = "INSERT INTO votes(voteValue,eventID,userID) values(?,?,?)";
 
-        try(Connection connection = SqliteConnection.Connector()) {
+        try(Connection connection = LocalSqliteConnection.Connector()) {
             PreparedStatement prstm = connection.prepareStatement(query);
 
             prstm.setInt(1, voteValue);
@@ -152,7 +152,7 @@ public class MyEventsInfoCell implements Initializable {
         int voteValue = 0;
         String query = "INSERT INTO votes(voteValue,eventID,userID) values(?,?,?)";
 
-        try(Connection connection = SqliteConnection.Connector()) {
+        try(Connection connection = LocalSqliteConnection.Connector()) {
             PreparedStatement prstm = connection.prepareStatement(query);
 
             prstm.setInt(1, voteValue);
@@ -193,7 +193,7 @@ public class MyEventsInfoCell implements Initializable {
         try {
 
             Stage eventPanel = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/EventEditPanel.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/app/EventEditPanel.fxml"));
             Pane root = loader.load();
             EventEditorPanel eventEditorPanel = loader.getController();
 
@@ -214,4 +214,22 @@ public class MyEventsInfoCell implements Initializable {
             throw new RuntimeException(e);
         }
     }
+    public void OpenDeleteEventConfirmation(ActionEvent event){
+        try{
+        Stage deletePanel = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/app/DeleteEventConfirmation.fxml"));
+        Pane root = loader.load();
+        DeleteEventConfirmation eventDeletePanel = loader.getController();
+
+        eventDeletePanel.setCurrentEvent(this.currentEvent);
+
+
+        deletePanel.setTitle("Event Deletion Panel");
+        deletePanel.setResizable(false);
+        deletePanel.setScene(new Scene(root));
+        deletePanel.show();
+    }catch (Exception e){
+            e.printStackTrace();
+        }
+}
 }

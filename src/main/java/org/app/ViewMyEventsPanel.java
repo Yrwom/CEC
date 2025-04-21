@@ -59,7 +59,7 @@ public class ViewMyEventsPanel implements Initializable {
             for (int i = start; i < end; i++) {
 
                 // System.out.println("We are in for loop");
-                FXMLLoader eventLoader = new FXMLLoader((getClass().getResource("/MyEventsCell.fxml")));
+                FXMLLoader eventLoader = new FXMLLoader((getClass().getResource("/org/app/MyEventsCell.fxml")));
                 cell = eventLoader.load();
                 MyEventsInfoCell myEventsInfoCell = eventLoader.getController();
                 // System.out.println("Cell should load here");

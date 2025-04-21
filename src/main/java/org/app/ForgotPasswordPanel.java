@@ -90,7 +90,7 @@ public class ForgotPasswordPanel implements Initializable {
                     Timeline countDown = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
                         secondsRemaining[0]--;
 
-                        responseCode.setText("Event Created successfully, window closing in " + secondsRemaining[0] + " seconds!");
+                        responseCode.setText("Password Updated! Window closing in " + secondsRemaining[0] + " seconds!");
                         if (secondsRemaining[0] <= 0) {
                             Stage stage = (Stage) responseCode.getScene().getWindow();
                             stage.close();

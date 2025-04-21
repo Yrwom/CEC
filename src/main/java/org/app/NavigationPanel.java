@@ -1,5 +1,6 @@
 package org.app;
 
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -25,7 +27,8 @@ import static javax.swing.UIManager.get;
 
 public class NavigationPanel implements Initializable {
 
-
+    @FXML
+    private AnchorPane navigationPane;
     @FXML
     private Label NavTitle;
     @FXML
@@ -48,6 +51,8 @@ public class NavigationPanel implements Initializable {
     private Label CurrentRole;
     @FXML
     private Label CurrentRoleFlavorText;
+    @FXML
+    private Button openSync;
 
     //varibles for calendar creation
     private YearMonth dateFocus;
@@ -55,9 +60,8 @@ public class NavigationPanel implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         dateFocus = YearMonth.now();
-
+        boolean offlineMode = UserSession.getOfflineStatus();
         createCalendar(dateFocus);
         User currentUser = UserSession.getCurrentUser();
         if(!Objects.equals(currentUser.getRole(),"Event Coordinator")){
@@ -68,8 +72,9 @@ public class NavigationPanel implements Initializable {
             CurrentRoleFlavorText.setText("You are currently logged in as an:      ");
             CurrentRole.setText(currentUser.getRole());
         }
-
-
+        if(offlineMode == true) {
+            openSync.setVisible(false);
+        }
     }
 
     public void MonthForward(ActionEvent monthForward){
@@ -106,12 +111,12 @@ try {
         Node cell;
 
         if (cellIndex < dayOffset || cellIndex >= dayOffset + daysInMonth) {
-            FXMLLoader blankLoader = new FXMLLoader((getClass().getResource("/BlankCell.fxml")));
+            FXMLLoader blankLoader = new FXMLLoader((getClass().getResource("/org/app/BlankCell.fxml")));
             cell = blankLoader.load();
         }else {
             int day = cellIndex - dayOffset + 1;
             try {
-                FXMLLoader dayLoader = new FXMLLoader((getClass().getResource("/DayCell.fxml")));
+                FXMLLoader dayLoader = new FXMLLoader((getClass().getResource("/org/app/DayCell.fxml")));
                 cell = dayLoader.load();
                 LocalDate currentDate = yearMonth.atDay(day);
                 DayCell daycell = dayLoader.getController();
@@ -122,7 +127,7 @@ try {
 
             }catch(Exception e){
                 e.printStackTrace();
-                FXMLLoader blankLoader = new FXMLLoader((getClass().getResource("/BlankCell.fxml")));
+                FXMLLoader blankLoader = new FXMLLoader((getClass().getResource("/org/app/BlankCell.fxml")));
                 cell = blankLoader.load();
             }
 
@@ -147,7 +152,7 @@ try {
             Stage authPanel = new Stage();
             FXMLLoader loader = new FXMLLoader();
 
-            Pane root = loader.load(getClass().getResource("/AuthPanel.fxml").openStream());
+            Pane root = loader.load(getClass().getResource("/org/app/AuthPanel.fxml").openStream());
             authPanel.setTitle("Authorization Panel");
             authPanel.setResizable(false);
             authPanel.setScene(new Scene(root));
@@ -163,7 +168,7 @@ try {
             Stage eventPanel = new Stage();
             FXMLLoader loader = new FXMLLoader();
             System.out.println("Opening Stream...");
-            Pane root = loader.load(getClass().getResource("/EventCreationPanel.fxml").openStream());
+            Pane root = loader.load(getClass().getResource("/org/app/EventCreationPanel.fxml").openStream());
             System.out.println("Loading Controller...");
             System.out.println("Setting Title...");
             eventPanel.setTitle("Event Creation Panel");
@@ -182,7 +187,7 @@ try {
             FXMLLoader loader = new FXMLLoader();
 
             System.out.println("Opening Stream...");
-            Pane root = loader.load(getClass().getResource("/SettingsPanel.fxml").openStream());
+            Pane root = loader.load(getClass().getResource("/org/app/SettingsPanel.fxml").openStream());
             System.out.println("Loading Controller...");
             SettingsPanel settingsPanel = (SettingsPanel) loader.getController();
 
@@ -205,7 +210,7 @@ try {
             FXMLLoader loader = new FXMLLoader();
 
             System.out.println("Opening Stream...");
-            Pane root = loader.load(getClass().getResource("/SyncPanel.fxml").openStream());
+            Pane root = loader.load(getClass().getResource("/org/app/SyncPanel.fxml").openStream());
             System.out.println("Loading Controller...");
             SyncPanel syncOperationPanel = (SyncPanel) loader.getController();
             syncPanel.setResizable(false);
@@ -228,7 +233,7 @@ try {
             Stage viewMyEventsPanel = new Stage();
             FXMLLoader loader = new FXMLLoader();
             System.out.println("Opening Stream...");
-            Pane root = loader.load(getClass().getResource("/ViewMyEventsPanel.fxml").openStream());
+            Pane root = loader.load(getClass().getResource("/org/app/ViewMyEventsPanel.fxml").openStream());
             System.out.println("Loading Controller...");
             ViewMyEventsPanel myEventsPanel = (ViewMyEventsPanel) loader.getController();
             myEventsPanel.setEvents(events);

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDate;
 import javafx.scene.paint.Color;
+import org.sqlite.SQLiteConnection;
 
 public class EventService {
 
@@ -17,7 +18,7 @@ public class EventService {
 
 
     public EventService() {
-        connection = SqliteConnection.Connector();
+        connection = LocalSqliteConnection.Connector();
         if (connection == null)
 
             System.exit(1);
@@ -64,7 +65,7 @@ public class EventService {
         System.out.println(userID);
         String query = "INSERT INTO events(eventName,startDate,endDate,maxParticipants,location,eventType,eventDescription,votingEnabled,userUUID,eventUUID) values(?,?,?,?,?,?,?,?,?,?)";
 
-        try (Connection connection = SqliteConnection.Connector()) {
+        try (Connection connection = LocalSqliteConnection.Connector()) {
 
             if (connection == null) {
                 System.out.println("Failed to establish a database connection!");
@@ -162,7 +163,7 @@ public class EventService {
                 "eventDescription = COALESCE(?,eventDescription)," +
                 "votingEnabled = COALESCE(?,votingEnabled)" +
                 "WHERE eventUUID = ?;";
-        try (Connection connection = SqliteConnection.Connector();
+        try (Connection connection = LocalSqliteConnection.Connector();
              PreparedStatement ps = connection.prepareStatement(query)) {
 
            if(eventName == null) ps.setNull(1, Types.VARCHAR);
@@ -213,6 +214,37 @@ public class EventService {
             return false;
         }
 
+    }
+    public class DeleteResult{
+        public final boolean localDeleted;
+        public final boolean centralDeleted;
+        public DeleteResult(boolean localDeleted, boolean centralDeleted){
+            this.localDeleted = localDeleted;
+            this.centralDeleted = centralDeleted;
+        }
+    }
+
+    public DeleteResult deleteEventGlobally(String eventUUID){
+        DeleteEventConfirmation deleteEventConfirmation = new DeleteEventConfirmation();
+        boolean localOk   = false;
+        boolean centralOk = false;
+
+        // 1) local
+        try (Connection local = LocalSqliteConnection.Connector()) {
+            localOk = EventDAO.deleteEvent(local, eventUUID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // 2) central — but don’t let a failure override localOk
+        try (Connection central = CentralSqliteConnection.Connector()) {
+            centralOk = EventDAO.deleteEvent(central, eventUUID);
+        }catch (SQLException e) {
+            e.printStackTrace();
+            // TODO: queue for retry later
+        }
+
+        return new DeleteResult(localOk, centralOk);
     }
 
         }

@@ -12,18 +12,20 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ResourceBundle;
-import java.util.UUID;
 
 public class EventEditorPanel implements Initializable {
+
     public EventService eventService = new EventService();
     private Event eventToEdit;
     private String eventType;
     private Boolean votingStatus;
+    private int maxParticipants;
+    private YearMonth dateFocus = YearMonth.now();
+
     @FXML
     private Button eventClose;
     @FXML
@@ -44,28 +46,31 @@ public class EventEditorPanel implements Initializable {
     private TextArea inputEventDescription;
     @FXML
     private Label statusLabel;
-    private int maxParticipants;
-    private YearMonth dateFocus = YearMonth.now();
 
-
+    //this sets the field to NULL rather than an empty string so SQLite detects it. See EventService for more
     private String nullIfEmpty(String s){
         if(s == null) return null;
         String trimmed = s.trim();
         return trimmed.isEmpty() ? null : trimmed;
     }
+    //same as nullIfEmpty but for LocalDate type
     private LocalDate NullIfEmptyDate(DatePicker dp){
         return dp.getValue();
     }
+
+    //sets the current event that is accessed
     public void setCurrentEvent(Event currentEvent){
         this.eventToEdit = currentEvent;
     }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //sets spinner values
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,99, 1);
         inputMaxParticipants.setValueFactory(valueFactory);
         inputMaxParticipants.getValue();
 
-
+        //debug
         inputMaxParticipants.valueProperty().addListener(new ChangeListener<Integer>() {
             @Override
             public void changed(ObservableValue<? extends Integer> observableValue, Integer integer, Integer t1) {
@@ -75,6 +80,8 @@ public class EventEditorPanel implements Initializable {
         });
 
     }
+
+    //sets event type and voting status
     public void SetEventTypePublic(ActionEvent RadioButton) {
         eventType = "Public";
     }
@@ -91,6 +98,7 @@ public class EventEditorPanel implements Initializable {
         votingStatus = false;
     }
 
+    //closes window
     public void CloseEventCreationPanel(ActionEvent closeEditPanel) {
         try {
             ((Node) closeEditPanel.getSource()).getScene().getWindow().hide();
@@ -99,7 +107,7 @@ public class EventEditorPanel implements Initializable {
 
         }
     }
-
+    //Gathers all the new infor and submits the edit attempt
     public void submitEditEvent(){
         //new values
          String newEventName = nullIfEmpty(inputEventName.getText());
@@ -112,6 +120,7 @@ public class EventEditorPanel implements Initializable {
          String newEventDescription = nullIfEmpty(inputEventDescription.getText());
          String eventUUID = eventToEdit.getEventUUID();
         try {
+            //if the attempt is valid it will give the user a success message and close the window
             if(eventService.EditEvent(newEventName, newStartDate, newEndDate, newMaxParticipants, newLocation, newEventType, newEventDescription, newVotingStatus, eventUUID)){
                 statusLabel.setTextFill(Color.GREEN);
                 submitEditEvent.setVisible(false);
@@ -131,7 +140,7 @@ public class EventEditorPanel implements Initializable {
                 }));
                 countDown.setCycleCount(5);
                 countDown.play();
-
+            //if the attempt fails the user is notified of why
             }else {
                 statusLabel.setTextFill(EventService.getStatusLabelColor());
                 System.out.println("ReponseCode:"+EventService.getResponseCode());
@@ -141,6 +150,7 @@ public class EventEditorPanel implements Initializable {
             e.printStackTrace();
         }
     }
+    //checks that start date is before end date
     public void DateCheck(){
         if(!eventService.DateCompare(inputStartDate.getValue(), inputEndDate.getValue())) {
             EventService.setResponseCode("End Date must be the same or later than the start date!");

@@ -2,22 +2,20 @@ package org.app;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.paint.Color;
-
+import javafx.scene.layout.AnchorPane;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.time.YearMonth;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class EventInfoCell implements Initializable {
+
     @FXML
     private Label eventName;
     @FXML
@@ -37,7 +35,7 @@ public class EventInfoCell implements Initializable {
     @FXML
     private Label eventDescription;
     @FXML
-    private Group Vote;
+    private AnchorPane VoteContainer;
     @FXML
     private RadioButton VoteYes;
     @FXML
@@ -48,6 +46,8 @@ public class EventInfoCell implements Initializable {
     private Label NoCount;
     @FXML
     private Label YesCount;
+    @FXML
+    private Label VoteLabel;
 
     private List<Event> events;
     private Event currentEvent;
@@ -55,40 +55,46 @@ public class EventInfoCell implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-            voteResponseBox.setVisible(false);
-
     }
+    //sets the current events
     public void setEvents(List<Event> events) {
         System.out.println("EventInfoCell: Number of events = " + events.size());
         this.events = events;
     }
+    public void setCurrentEvent(Event event){currentEvent = event;}
+    public Event getCurrentEvent(){return currentEvent;}
 
-
+    //sets the event index, used in ExpandedDayCell
     public void SetEventIndex(int index) {
         eventIndex = index;
     }
+
+    //used to populate the expanded day cell showing all event info
     public void PopulateExpandDay(int eventIndex){
-        Vote.setVisible(false);
+        voteResponseBox.setVisible(false);
+        VoteNo.setVisible(false);
+        VoteYes.setVisible(false);
+        VoteLabel.setVisible(false);
+        //if there are no events return
         if (events == null || events.size() <= eventIndex) {
             System.out.println("Event list is not properly set or index is out of range.");
             return;
         }
 
         System.out.println("We are in populate expand day in the info cell class");
+        //gets the current user for limitation checks like voting
         User currentUser = UserSession.getCurrentUser();
 
-        if(!Objects.equals(currentUser.getRole(), "Guest")){
-            Vote.setVisible(true);
-        }
         Event event = events.get(eventIndex);
         this.currentEvent = events.get(eventIndex);
         List<User> userList = UserDAO.fetchUserByUserID(event.getUserUUID());
+        boolean votingStatus = event.getVotingStatus();
         if(!userList.isEmpty()) {
+
             User creator = userList.get(0);
-            if(event.getVotingStatus()){
-                    System.out.println("we are in voting status check");
-                    Vote.setVisible(true);
-            }
+            System.out.println(event.getVotingStatus());
+            voteCheck(votingStatus);
+            roleCheck(currentUser);
             checkHasVoted();
 
             String votesByEventUUID = event.getEventUUID();
@@ -119,7 +125,7 @@ public class EventInfoCell implements Initializable {
         String userUUID = UserSession.getUserUUID();
         String query = "INSERT INTO votes(voteValue,eventID,userID) values(?,?,?)";
 
-        try(Connection connection = SqliteConnection.Connector()) {
+        try(Connection connection = LocalSqliteConnection.Connector()) {
             PreparedStatement prstm = connection.prepareStatement(query);
 
             prstm.setInt(1, voteValue);
@@ -129,7 +135,9 @@ public class EventInfoCell implements Initializable {
             int rowsInserted = prstm.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("A vote inserted successfully!");
-                Vote.setVisible(false);
+                VoteNo.setVisible(false);
+                VoteYes.setVisible(false);
+                VoteLabel.setVisible(false);
 
             }
         }catch(Exception e){
@@ -145,7 +153,7 @@ public class EventInfoCell implements Initializable {
         int voteValue = 0;
         String query = "INSERT INTO votes(voteValue,eventID,userID) values(?,?,?)";
 
-        try(Connection connection = SqliteConnection.Connector()) {
+        try(Connection connection = LocalSqliteConnection.Connector()) {
             PreparedStatement prstm = connection.prepareStatement(query);
 
             prstm.setInt(1, voteValue);
@@ -155,7 +163,9 @@ public class EventInfoCell implements Initializable {
             int rowsInserted = prstm.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("A vote inserted successfully!");
-                Vote.setVisible(false);
+                VoteNo.setVisible(false);
+                VoteYes.setVisible(false);
+                VoteLabel.setVisible(false);
 
 
 
@@ -175,11 +185,37 @@ public void checkHasVoted(){
         boolean hasVoted = VotesDAO.HasVotedCheck(eventUUID, userUUID);
 
         if(hasVoted){
-            Vote.setVisible(false);
+            VoteNo.setVisible(false);
+            VoteYes.setVisible(false);
+            VoteLabel.setVisible(false);
 
             voteResponseBox.setVisible(true);
         }else {
-            Vote.setVisible(true);
+            VoteNo.setVisible(true);
+            VoteYes.setVisible(true);
+            VoteLabel.setVisible(true);
         }
+}
+public void roleCheck(User user){
+    if(Objects.equals(user.getRole(), "Guest")){
+        voteResponseBox.setVisible(true);
+        voteResponseBox.setText("Guests Are Ineligible to vote!");
+        System.out.println("Vote button should not be present");
+    }
+}
+public void voteCheck(boolean votingStatus){
+    if(!votingStatus){
+        System.out.println("we are in voting status check");
+        System.out.println(VoteContainer.isVisible());
+        voteResponseBox.setVisible(true);
+        voteResponseBox.setText("Voting Disabled on this event!");
+        voteResponseBox.isVisible();
+        VoteNo.setVisible(false);
+        VoteNo.isVisible();
+        VoteYes.setVisible(false);
+        VoteLabel.setVisible(false);
+
+        System.out.println("Vote button should be gone");
+    }
 }
 }

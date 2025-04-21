@@ -4,18 +4,18 @@ import java.util.List;
 import java.util.Objects;
 
 public class AuthService {
-
+    //create variables
     Connection connection;
     public static String responseCode;
 
-
+    //double check connection is stable, if not, close app
     public AuthService() {
-        connection = SqliteConnection.Connector();
+        connection = LocalSqliteConnection.Connector();
         if (connection == null)
 
             System.exit(1);
     }
-
+    //method to check if the db is connected, see AuthPanel
     public boolean isDbConnected() {
         try {
             return !connection.isClosed();
@@ -24,7 +24,7 @@ public class AuthService {
             return false;
         }
     }
-
+    //method to check if the given username and password are present in the local database
     public boolean isLogin(String username, String password) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -54,6 +54,7 @@ public class AuthService {
         }
 
     }
+    //setter and getters for the response code for various errors
     public static void setResponseCode(String code) {
         responseCode = code;
     }
@@ -62,10 +63,15 @@ public class AuthService {
         return responseCode;
     }
 
+    //method for check in a password is valid.
+    //A valid password will not be null, contain white space, have 8 characters, contain special characters, and contain a digit.
+    //if any of the above are flagged, a popup is given to the user with the error
     public boolean isValidPassword(String password){
         try {
             System.out.println("We are in isValidPassword");
             System.out.println(password);
+            //Regex's that check for whitespace, digits, and special characters.
+            //I chose to allow any and all special characters for fun as it won't impact the app
             String whiteSpaceRegex = ".*\\s.*";
             String digitRegex = ".*\\d.*";
             String specialCharacterRegex = ".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*";
@@ -99,7 +105,8 @@ public class AuthService {
         }
         return true;
         }
-
+        //method for checking a given username is valid
+        //A username is valid by not being null and not already existing in the database
         public boolean isValidUsername(String username){
         try{
             if(Objects.equals(username,"")){
@@ -118,6 +125,8 @@ public class AuthService {
         }
         return true;
         }
+
+        //Pretty simple here, a role is valid if it is not left blank in the combo box
         public boolean isValidRole(String role){
         try{
             if (role == null) {
@@ -131,10 +140,13 @@ public class AuthService {
         return true;
         }
 
+        //This method takes the username, password, and role of a new user and inserts it into the local database
+        //upon completion the user will receive a message that the user has been created successfully.
+        //if there is an error, it returns false and an error is given by AuthPanel
     public boolean newUser(String username, String password, String role, String userUUID) {
         String query = "INSERT INTO users(userUUID,username,password,role) values(?,?,?,?)";
 
-        try (Connection connection = SqliteConnection.Connector()){
+        try (Connection connection = LocalSqliteConnection.Connector()){
 
                 if (connection == null) {
                     System.out.println("Failed to establish a database connection!");
@@ -160,43 +172,47 @@ public class AuthService {
             }
             return false;
         }
-public boolean ForgotPassword(String userUUID, String newPassword){
-        String query =  "UPDATE users SET " +
-                        "password = ? " +
-                        "WHERE userUUID = ?;";
 
-        try(Connection connection = SqliteConnection.Connector()){
-            if (connection == null) {
-                System.out.println("Failed to establish a database connection!");
-                return false;
-            }else if(isValidPassword(newPassword)){
-                PreparedStatement ps = connection.prepareStatement(query);
-                ps.setString(1,newPassword);
-                ps.setString(2,userUUID);
+        //this method handles updating the local database with the new password given in ForgotPasswordPanel
+        //it uses the users UUID which is created automatically when a new user is created. See UserDAO for more
+    public boolean ForgotPassword(String userUUID, String newPassword){
+            String query =  "UPDATE users SET " +
+                            "password = ? " +
+                            "WHERE userUUID = ?;";
 
-                int rowUpdated = ps.executeUpdate();
-                if(rowUpdated > 0){
-                    setResponseCode("Password Updated Sec");
-                    return true;
-                } else{
+            try(Connection connection = LocalSqliteConnection.Connector()){
+                if (connection == null) {
+                    System.out.println("Failed to establish a database connection!");
                     return false;
+                }else if(isValidPassword(newPassword)){
+                    PreparedStatement ps = connection.prepareStatement(query);
+                    ps.setString(1,newPassword);
+                    ps.setString(2,userUUID);
+
+                    int rowUpdated = ps.executeUpdate();
+                    if(rowUpdated > 0){
+                        setResponseCode("Password Updated Sec");
+                        return true;
+                    } else{
+                        return false;
+                    }
                 }
+            }catch (Exception e){
+                e.printStackTrace();
             }
-        }catch (Exception e){
-            e.printStackTrace();
+            return false;
         }
-        return false;
-}
-public boolean ConfirmNewPasswordMatch(String newpassword,String confirmedPassword){
-    if(Objects.equals(newpassword, confirmedPassword)){
-        return true;
-    }else {
-        setResponseCode("Passwords do not match, please check.");
-        return false;
+        //this method checks whether the newpassword matches itself as there is a ConfirmPassword method in the ForgotPassword Panel.
+    public boolean ConfirmNewPasswordMatch(String newpassword,String confirmedPassword){
+        if(Objects.equals(newpassword, confirmedPassword)){
+            return true;
+        }else {
+            setResponseCode("Passwords do not match, please check.");
+            return false;
+        }
     }
-}
 
 
-    }
+}
 
 

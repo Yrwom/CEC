@@ -58,7 +58,7 @@ public void updateExpandedDay(){
             for (int i = start; i < end; i++) {
 
                // System.out.println("We are in for loop");
-                FXMLLoader eventLoader = new FXMLLoader((getClass().getResource("/EventInfoCell.fxml")));
+                FXMLLoader eventLoader = new FXMLLoader((getClass().getResource("/org/app/EventInfoCell.fxml")));
                 cell = eventLoader.load();
                 EventInfoCell eventInfoCell = eventLoader.getController();
                // System.out.println("Cell should load here");

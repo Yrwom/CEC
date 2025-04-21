@@ -5,6 +5,8 @@ private  String userUUID;
 private  String username;
 private  String password;
 private  String role;
+private  String fontColor;
+private  String fontFamily;
     public User(){
 
 
@@ -30,6 +32,14 @@ private  String role;
         this.role = role;
     }
 
+    public void setFontColor(String fontColor){
+        this.fontColor = fontColor;
+    }
+
+    public void setFontFamily(String fontFamily){
+        this.fontFamily = fontFamily;
+    }
+
     // Instance getter for userID
     public String getUserUUID() {
         return this.userUUID;
@@ -50,5 +60,12 @@ private  String role;
         return this.role;
     }
 
+    public String getFontColor(){
+        return this.fontColor;
+    }
+
+    public String getFontFamily(){
+        return this.fontFamily;
+    }
 
 }

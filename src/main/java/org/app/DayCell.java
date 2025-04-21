@@ -5,21 +5,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.app.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.event.ActionEvent;
-//import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.net.URL;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.time.LocalDate;
-import java.util.Queue;
 import java.util.ResourceBundle;
 
 public class DayCell implements Initializable {
@@ -44,19 +38,22 @@ public class DayCell implements Initializable {
 
     }
     public void setDayNumber(LocalDate date){
+        //this setter is used to set the day number for every day on the calendar. See Navigation Panel for more
        this.cellDate = date;
         dayNumber.setText(String.valueOf(date.getDayOfMonth()));
 
     }
+    //this method will let you get the date of a given cell if needed
     public LocalDate getCurrentDate(){
         return this.cellDate;
     }
-
-    public boolean PopulateDayCell(LocalDate currentDate){
+    //this method is the main method for filling out the calendar in the Navigation Panel
+    public void PopulateDayCell(LocalDate currentDate){
+        //an events list is created based on the current date of each cell. See EventDAO for functionality
         List<Event> events = EventDAO.fetchEventByDate(currentDate);
 
         if(events != null && !events.isEmpty()){
-
+        //this block takes car of loading the top level view for each day including the first two events creator and title
           //  System.out.println("Event 1 should be printed");
             Event firstEvent = events.getFirst();
            List<User> userList = UserDAO.fetchUserByUserID(firstEvent.getUserUUID());
@@ -79,18 +76,18 @@ public class DayCell implements Initializable {
                 event2Name.setText("");
                 event2Creator.setText("");
             }
-            return true;
         }else {
+            //if no event is on that day, nothing is shown
            expandButton.setVisible(false);
          //   System.out.println("Evenything is set to blank");
             event1Name.setText("");
             event1Creator.setText("");
             event2Name.setText("");
             event2Creator.setText("");
-            return false;
         }
 
     }
+    //this method opens the expanded day letting you see all the events details and vote on the event
     public void ExpandDayCell(ActionEvent expandButton){
         try {
             List<Event> events = EventDAO.fetchEventByDate(cellDate);
@@ -98,7 +95,8 @@ public class DayCell implements Initializable {
             Stage expandedDayCell = new Stage();
             FXMLLoader loader = new FXMLLoader();
             System.out.println("Opening Stream...");
-            Pane root = loader.load(getClass().getResource("/ExpandedDayCell.fxml").openStream());
+            Pane root = loader.load(getClass().getResource("/org/app/ExpandedDayCell.fxml").openStream());
+            Scene scene = new Scene(root);
             System.out.println("Loading Controller...");
             ExpandedDayCell expandDayCell = (ExpandedDayCell) loader.getController();
             expandDayCell.setEvents(events);
@@ -107,7 +105,7 @@ public class DayCell implements Initializable {
             expandedDayCell.setTitle("Expand Day Panel");
             expandedDayCell.setResizable(false);
             System.out.println("Setting Scene...");
-            expandedDayCell.setScene(new Scene(root));
+            expandedDayCell.setScene(scene);
             expandedDayCell.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
