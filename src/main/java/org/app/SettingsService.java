@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class SettingsService {
+    //updates the users prefrences based on what is saved in the settings panel
     public static boolean updateUserPrefrences(String userUUID, String fontColor, String fontFamily){
 
         String query = "UPDATE users SET " +

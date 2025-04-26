@@ -15,11 +15,13 @@ public class SyncPanel implements Initializable {
     @FXML
     private Button closeSync;
 
+    // NEEDS IMPLEMENTATION STILL
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
     }
+    //closes sync panel
     public void CloseSync(ActionEvent closeSync){
         ((Node) closeSync.getSource()).getScene().getWindow().hide();
     }

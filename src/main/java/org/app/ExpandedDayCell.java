@@ -5,12 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-
 import javafx.event.ActionEvent;
 import java.net.URL;
-import java.time.LocalDate;
+
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -35,57 +33,58 @@ public class ExpandedDayCell implements Initializable {
 
 
     }
+    //allows program to set instance of events for use in this class
     public void setEvents(List<Event> events) {
         this.events = events;
         System.out.println("ExpandedDayCell: Number of events = " + events.size());
         updateExpandedDay();
     }
+    //fet the current event
     public List<Event> getEvents(){
         return events;
     }
 
+    //main for loop to fill out the expanded day view when clicking "More" on a certain day
+    public void updateExpandedDay(){
+            expandedBase.getChildren().clear();
 
-public void updateExpandedDay(){
-        expandedBase.getChildren().clear();
+            int start = currentPage * EVENTS_PER_PAGE;
+            int end = Math.min(start + EVENTS_PER_PAGE, events.size());
+        System.out.println("Number of events: " + events.size());
+            Node cell;
+            int columns = 2;
 
-        int start = currentPage * EVENTS_PER_PAGE;
-        int end = Math.min(start + EVENTS_PER_PAGE, events.size());
-    System.out.println("Number of events: " + events.size());
-        Node cell;
-        int columns = 2;
+            try {
+                for (int i = start; i < end; i++) {
 
-        try {
-            for (int i = start; i < end; i++) {
+                    FXMLLoader eventLoader = new FXMLLoader((getClass().getResource("/org/app/EventInfoCell.fxml")));
+                    cell = eventLoader.load();
+                    EventInfoCell eventInfoCell = eventLoader.getController();
+                    eventInfoCell.setEvents(this.events);
+                    eventInfoCell.SetEventIndex(i);
+                    eventInfoCell.PopulateExpandDay(i);
 
-               // System.out.println("We are in for loop");
-                FXMLLoader eventLoader = new FXMLLoader((getClass().getResource("/org/app/EventInfoCell.fxml")));
-                cell = eventLoader.load();
-                EventInfoCell eventInfoCell = eventLoader.getController();
-               // System.out.println("Cell should load here");
-                eventInfoCell.setEvents(this.events);
-                eventInfoCell.SetEventIndex(i);
-                eventInfoCell.PopulateExpandDay(i);
+                    int localIndex = i - start;
+                    int col = localIndex % columns;
+                    int row = localIndex / columns;
+                    expandedBase.add(cell, col, row);
 
-
-                int localIndex = i - start;
-                int col = localIndex % columns;
-                int row = localIndex / columns;
-                expandedBase.add(cell, col, row);
-
-               // System.out.println("node added");
+                }
+                    leftArrow.setVisible(currentPage > 0);
+                    rightArrow.setVisible(end < events.size());
+            }catch (Exception e){
+                e.printStackTrace();
             }
-                leftArrow.setVisible(currentPage > 0);
-                rightArrow.setVisible(end < events.size());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        }
+            }
+            //allows user to click left if they have clicked right to view another page
         public void PageLeft(ActionEvent event){
             if( currentPage > 0){
                 currentPage--;
                 updateExpandedDay();
         }
         }
+
+        //allows the user to page to the right if more than 4 events exit on a given day
         public void PageRight(ActionEvent event){
             int totalPages = (int) Math.ceil(events.size() / (double) EVENTS_PER_PAGE);
             if( currentPage < totalPages - 1){
@@ -93,6 +92,7 @@ public void updateExpandedDay(){
                 updateExpandedDay();
         }
     }
+        //allows user to close expanded day view cleanly
         public void CloseExpandedDay(ActionEvent event){
             ((Node) event.getSource()).getScene().getWindow().hide();
         }

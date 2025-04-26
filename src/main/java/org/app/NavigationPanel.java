@@ -1,6 +1,5 @@
 package org.app;
 
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,17 +12,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.ZonedDateTime;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import static javax.swing.UIManager.get;
+
 
 public class NavigationPanel implements Initializable {
 
@@ -60,10 +58,14 @@ public class NavigationPanel implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //sets the dateFocus todays time making sure the calendar is opened on the current month
         dateFocus = YearMonth.now();
         boolean offlineMode = UserSession.getOfflineStatus();
         createCalendar(dateFocus);
+
         User currentUser = UserSession.getCurrentUser();
+        //checks if the user is an event coordinator. If they are not, the create event button is hidden
+        //additionally displays the users role and username
         if(!Objects.equals(currentUser.getRole(),"Event Coordinator")){
             createEvent.setVisible(false);
             CurrentRoleFlavorText.setText("You are currently logged in as a:      ");
@@ -76,24 +78,27 @@ public class NavigationPanel implements Initializable {
             openSync.setVisible(false);
         }
     }
-
+    //forward arrow allows the user to move forward in months
     public void MonthForward(ActionEvent monthForward){
         dateFocus = dateFocus.plusMonths(1);
         calendarBase.getChildren().clear();
         createCalendar(dateFocus);
     }
+    //allows user to move backwards in months
     public void MonthBackward(ActionEvent monthBackward){
         dateFocus = dateFocus.minusMonths(1);
         calendarBase.getChildren().clear();
 
         createCalendar(dateFocus);
     }
+    //allows the user to refresh the calendar after and changes are made
     public void RefreshButton(ActionEvent resetButton){
         dateFocus = YearMonth.now();
         calendarBase.getChildren().clear();
         createCalendar(dateFocus);
 
     }
+    //Creates the calenday utilizing the DayCell class as well as the BlankCell class to fill out the full days and fill any blank spaces with a gray box
     public void createCalendar(YearMonth yearMonth){
 
         currentMonth.setText(String.valueOf(dateFocus.getMonth()+ " " + (String.valueOf(dateFocus.getYear()))));
@@ -139,11 +144,12 @@ try {
     e.printStackTrace();
 }
     }
+    //sets the users username in the top welcoming them to the application
     public void SetNavTitle(String inputUsername) {
 
         NavTitle.setText("Welcome to CEC " + inputUsername + "!");
     }
-
+    //logs the users out and returns them to the AuthPanel to log in or create a new user
     public void Logout(ActionEvent logout) {
         try {
 
@@ -161,7 +167,7 @@ try {
             e.printStackTrace();
         }
     }
-
+    //opens the event creation modal
     public void OpenEventCreation(ActionEvent openEventCreation) {
         try {
             System.out.println("Creating Stage...");
@@ -180,6 +186,7 @@ try {
             throw new RuntimeException(e);
         }
     }
+    //open the settins modal
     public void OpenSettings(ActionEvent openSettings) {
         try {
             System.out.println("Creating Stage...");
@@ -202,7 +209,7 @@ try {
             throw new RuntimeException(e);
         }
     }
-
+    //opens the sync modal
     public void OpenSync(ActionEvent openSync) {
         try {
             System.out.println("Creating Stage...");
@@ -225,6 +232,7 @@ try {
             throw new RuntimeException(e);
         }
     }
+    //opens the My Events screen to view any events you've created and edit or delete them
     public void OpenMyEvents(ActionEvent openMyEvents){
         try {
             String userUUID = UserSession.getUserUUID();

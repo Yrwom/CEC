@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 
 
 public class VotesDAO {
-
+    //queries the votes table for a vote count based on an events UUID
     public static Votes fetchVotesByEventUUID(String eventUUID){
         Votes votes = new Votes();
 
@@ -45,6 +45,7 @@ public class VotesDAO {
         }
         return votes;
     }
+    //checks if a user has voted by checking the eventUUId and userUUID in the Votes Table
     public static boolean HasVotedCheck(String eventUUID, String userUUID){
         String query = "SELECT 1 FROM votes WHERE eventID = ? AND userID = ? LIMIT 1";
         try(Connection connection = LocalSqliteConnection.Connector();

@@ -7,7 +7,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import javafx.event.ActionEvent;
 import java.net.URL;
 import java.util.List;
@@ -37,7 +36,7 @@ public class ForgotPasswordPanel implements Initializable {
     @FXML
     private Button closeForgotPassword;
 
-
+    //handles toggle buttons and password fields to hide password for security
     public void initialize(URL location, ResourceBundle resources) {
         inputNewPassword.textProperty().bindBidirectional(passwordField.textProperty());
 
@@ -70,7 +69,7 @@ public class ForgotPasswordPanel implements Initializable {
         });
     }
 
-
+    //allows user to reset their password on button click. Has checks for a user existing and same checks as AuthService for NewUser
     public void ForgotPasswordExecute(ActionEvent forgotPassword) {
         List<User> userList = UserDAO.fetchUserByUsername(currentUsername.getText());
         if(userList.isEmpty()){

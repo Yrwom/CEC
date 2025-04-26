@@ -9,7 +9,7 @@ private  String fontColor;
 private  String fontFamily;
     public User(){
 
-
+    //user class to handle an instance of a user
 
     }
     // Instance setter for userID

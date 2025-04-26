@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="462.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.app.AuthPanel">
+   <children>
+      <TextField fx:id="inputUsername" layoutX="201.0" layoutY="140.0" promptText="Username">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="inputPassword" layoutX="201.0" layoutY="179.0" promptText="Password">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </TextField>
+      <Button fx:id="loginExecute" layoutX="171.0" layoutY="246.0" mnemonicParsing="false" onAction="#Login" text="Login">
+         <font>
+            <Font size="16.0" />
+         </font></Button>
+      <Button fx:id="userCreation" layoutX="253.0" layoutY="396.0" mnemonicParsing="false" onAction="#CreateUser" text="Create User" textAlignment="CENTER">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Label fx:id="isConnected" layoutX="65.0" layoutY="52.0" prefHeight="43.0" prefWidth="480.0" text="Status" textAlignment="CENTER" textFill="#cc0d0d">
+         <font>
+            <Font name="Bell MT" size="23.0" />
+         </font></Label>
+      <Label fx:id="CreateUser" layoutX="60.0" layoutY="317.0" prefHeight="43.0" prefWidth="480.0" text="Don't have a login? Create one!" textFill="#242222">
+         <font>
+            <Font name="Bell MT" size="23.0" />
+         </font>
+      </Label>
+      <Button fx:id="offlineMode" layoutX="17.0" layoutY="14.0" mnemonicParsing="false" onAction="#OpenOffline" text="Offline Mode" textAlignment="CENTER" />
+      <Button fx:id="closeCEC" layoutX="534.0" layoutY="14.0" mnemonicParsing="false" onAction="#CloseCEC" text="Exit :(" textAlignment="CENTER" />
+      <Button fx:id="forgotPassword" layoutX="283.0" layoutY="246.0" mnemonicParsing="false" onAction="#OpenForgotPassword" text="Forgot Password?">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <PasswordField fx:id="passwordField" layoutX="200.0" layoutY="179.0" prefHeight="36.0" prefWidth="199.0" promptText="Password">
+         <font>
+            <Font size="16.0" />
+         </font></PasswordField>
+      <ToggleButton fx:id="revealPass" layoutX="413.0" layoutY="184.0" mnemonicParsing="false" text="Reveal" />
+   </children>
+</AnchorPane>

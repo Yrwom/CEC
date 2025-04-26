@@ -2,7 +2,6 @@ package org.app;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
@@ -119,6 +118,7 @@ public class EventInfoCell implements Initializable {
             eventDescription.setText(event.getEventDescription());
         }
     }
+    //accepts a "Yes" vote from the user and stores it in the database
     public void VotedYes(){
         int voteValue = 1;
         String eventUUID = this.currentEvent.getEventUUID();
@@ -147,6 +147,7 @@ public class EventInfoCell implements Initializable {
         }
 
     }
+    //accepts a "No" Vote from a user and stores it in the database
     public void VotedNo(){
         String eventUUID = this.currentEvent.getEventUUID();
         String userUUID = UserSession.getUserUUID();
@@ -177,45 +178,48 @@ public class EventInfoCell implements Initializable {
         }
 
     }
-public void checkHasVoted(){
-        if(currentEvent == null)return;
-        String eventUUID = currentEvent.getEventUUID();
-        String userUUID = UserSession.getUserUUID();
+    //method to check if a user has already voted on an event, if so, display the response container instead of voting prompt
+    public void checkHasVoted(){
+            if(currentEvent == null)return;
+            String eventUUID = currentEvent.getEventUUID();
+            String userUUID = UserSession.getUserUUID();
 
-        boolean hasVoted = VotesDAO.HasVotedCheck(eventUUID, userUUID);
+            boolean hasVoted = VotesDAO.HasVotedCheck(eventUUID, userUUID);
 
-        if(hasVoted){
+            if(hasVoted){
+                VoteNo.setVisible(false);
+                VoteYes.setVisible(false);
+                VoteLabel.setVisible(false);
+
+                voteResponseBox.setVisible(true);
+            }else {
+                VoteNo.setVisible(true);
+                VoteYes.setVisible(true);
+                VoteLabel.setVisible(true);
+            }
+    }
+    //Checks if the users role is Guest. If it is, it hides the vote options and displays the response box
+    public void roleCheck(User user){
+        if(Objects.equals(user.getRole(), "Guest")){
+            voteResponseBox.setVisible(true);
+            voteResponseBox.setText("Guests Are Ineligible to vote!");
+            System.out.println("Vote button should not be present");
+        }
+    }
+    //checks if the user has already voted on given event and displays response accordingly
+    public void voteCheck(boolean votingStatus){
+        if(!votingStatus){
+            System.out.println("we are in voting status check");
+            System.out.println(VoteContainer.isVisible());
+            voteResponseBox.setVisible(true);
+            voteResponseBox.setText("Voting Disabled on this event!");
+            voteResponseBox.isVisible();
             VoteNo.setVisible(false);
+            VoteNo.isVisible();
             VoteYes.setVisible(false);
             VoteLabel.setVisible(false);
 
-            voteResponseBox.setVisible(true);
-        }else {
-            VoteNo.setVisible(true);
-            VoteYes.setVisible(true);
-            VoteLabel.setVisible(true);
+            System.out.println("Vote button should be gone");
         }
-}
-public void roleCheck(User user){
-    if(Objects.equals(user.getRole(), "Guest")){
-        voteResponseBox.setVisible(true);
-        voteResponseBox.setText("Guests Are Ineligible to vote!");
-        System.out.println("Vote button should not be present");
     }
-}
-public void voteCheck(boolean votingStatus){
-    if(!votingStatus){
-        System.out.println("we are in voting status check");
-        System.out.println(VoteContainer.isVisible());
-        voteResponseBox.setVisible(true);
-        voteResponseBox.setText("Voting Disabled on this event!");
-        voteResponseBox.isVisible();
-        VoteNo.setVisible(false);
-        VoteNo.isVisible();
-        VoteYes.setVisible(false);
-        VoteLabel.setVisible(false);
-
-        System.out.println("Vote button should be gone");
-    }
-}
 }

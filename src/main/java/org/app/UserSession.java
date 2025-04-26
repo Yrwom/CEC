@@ -4,6 +4,9 @@ import javafx.scene.Scene;
 import javafx.stage.Window;
 
 public class UserSession {
+
+    //captures the current users information and staticly saves it for use through that users session
+
     private static User currentUser;
     private static boolean offlineMode = false;
 

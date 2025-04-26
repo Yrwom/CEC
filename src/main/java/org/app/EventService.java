@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDate;
 import javafx.scene.paint.Color;
-import org.sqlite.SQLiteConnection;
 
 public class EventService {
 
@@ -16,7 +15,7 @@ public class EventService {
     public static int dateCompareResultInt;
     public static Color statusLabelColor;
 
-
+    //checks for connection to database, if connection isnt present application closes
     public EventService() {
         connection = LocalSqliteConnection.Connector();
         if (connection == null)
@@ -32,6 +31,7 @@ public class EventService {
             return false;
         }
     }
+    //getters and setters for various results used for events accorss program
     public static void setDateComparedResultInt(int code) {dateCompareResultInt = code;}
     public static int getDateCompareResultInt() {return dateCompareResultInt;}
 
@@ -52,6 +52,7 @@ public class EventService {
         return statusLabelColor;
     }
 
+    //main logic for creating a new event. Will check each varible for null and if said variable has any restrictions those are checks as well before submitting
     public boolean NewEvent(String eventName, LocalDate startDate, LocalDate endDate, int maxParticipants, String location, String eventType, String eventDescription, Boolean votingStatus, String userID, String eventID) {
         System.out.println("Max Pass" + maxParticipants);
         System.out.println(eventName);
@@ -151,7 +152,7 @@ public class EventService {
 
         return false;
         }
-
+    //follows the same logic as NewEvent but is used fo editing an existing event with the use of the events UUID
     public boolean EditEvent(String eventName, LocalDate startDate, LocalDate endDate, int maxParticipants, String location, String eventType, String eventDescription, Boolean votingStatus, String eventUUID) {
         String query = "UPDATE events SET " +
                 "eventName = COALESCE(?,eventName)," +
@@ -197,8 +198,8 @@ public class EventService {
         }
         return false;
     }
-    // on hold until central db is set up public boolean DeleteEvent(String eventUUID)
 
+    //Will compare the start date and end date of an event to ensure the end date is after the start date
     public boolean DateCompare(LocalDate startDate, LocalDate endDate){
         int dateCompare;
 
@@ -215,6 +216,7 @@ public class EventService {
         }
 
     }
+    //creates object to check whether an event has been deleted or not for use in SyncPanel
     public class DeleteResult{
         public final boolean localDeleted;
         public final boolean centralDeleted;
@@ -223,30 +225,27 @@ public class EventService {
             this.centralDeleted = centralDeleted;
         }
     }
-
+    //method to set deletion status to give feedback to the user in SyncPanel
     public DeleteResult deleteEventGlobally(String eventUUID){
         DeleteEventConfirmation deleteEventConfirmation = new DeleteEventConfirmation();
         boolean localOk   = false;
         boolean centralOk = false;
 
-        // 1) local
         try (Connection local = LocalSqliteConnection.Connector()) {
             localOk = EventDAO.deleteEvent(local, eventUUID);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        // 2) central — but don’t let a failure override localOk
         try (Connection central = CentralSqliteConnection.Connector()) {
             centralOk = EventDAO.deleteEvent(central, eventUUID);
         }catch (SQLException e) {
             e.printStackTrace();
-            // TODO: queue for retry later
-        }
 
+        }
         return new DeleteResult(localOk, centralOk);
     }
 
-        }
+}
 
 

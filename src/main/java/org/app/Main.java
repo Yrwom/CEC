@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 
 public class Main extends Application{
 
+    //on program start, the authpanel is launched allowing the user to login
     @Override
     public void start(Stage primaryStage) {
         try {

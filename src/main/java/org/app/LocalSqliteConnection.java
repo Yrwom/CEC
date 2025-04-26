@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
 public class LocalSqliteConnection {
+    //Handles establishing connection to local database based off of user.home since this program is an executable and does not have a static path.
     public static Connection Connector(){
         try {
             Class.forName("org.sqlite.JDBC");

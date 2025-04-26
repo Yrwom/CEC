@@ -8,7 +8,7 @@ import java.util.List;
 
 public class UserDAO {
 
-
+    //fetches a specific user by their username as they are unique
     public static List<User> fetchUserByUsername(String username) {
         List<User> userList = new ArrayList<>();
         String query = "SELECT * FROM users WHERE username = ?";
@@ -36,7 +36,7 @@ public class UserDAO {
 
         return userList;
     }
-
+    //fetches user by UUID typicall for events as they are stored on creation
     public static List<User> fetchUserByUserID(String userUUID) {
         List<User> userList = new ArrayList<>();
         String query = "SELECT * FROM users WHERE userUUID = ?";

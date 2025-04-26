@@ -19,10 +19,12 @@ public class OfflineModePanel implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //sets the current user into offline mode and stores it in user session
         UserSession.setOfflineStatus(true);
         offlineResponse.setText("You are now in offline mode!");
 
     }
+    //closes offline mode panel
     public void CloseOfflineMode(ActionEvent closeOffline){
         try{
             ((Node) closeOffline.getSource()).getScene().getWindow().hide();

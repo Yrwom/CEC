@@ -25,8 +25,10 @@ public class SettingsPanel implements Initializable {
     @FXML
     private Label settingsResponseCode;
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //sets values for combo boxes
         List<String> families = Font.getFamilies();
         FXCollections.sort(FXCollections.observableArrayList(families));
         fontFamilyCombo.setItems(FXCollections.observableArrayList(families));
@@ -37,10 +39,11 @@ public class SettingsPanel implements Initializable {
         );
         fontColorCombo.setItems(FXCollections.observableArrayList(colors));
     }
+    //closes settings panel
     public void CloseSettings(ActionEvent closeSettings){
         ((Node) closeSettings.getSource()).getScene().getWindow().hide();
     }
-
+    //saves settings to database for future use when loading user profile
     public void SaveSettings(ActionEvent saveSettings){
         String inputFamily = fontFamilyCombo.getValue();
         String inputColor = fontColorCombo.getValue();

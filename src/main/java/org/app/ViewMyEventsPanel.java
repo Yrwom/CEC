@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class ViewMyEventsPanel implements Initializable {
+
+    //follows same logic as Exapanded Day Cell to load all events for a given day but for a specific user instead
     @FXML
     private Button closeMyEvents;
     @FXML

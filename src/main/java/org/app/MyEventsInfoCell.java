@@ -11,7 +11,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -56,24 +55,30 @@ public class MyEventsInfoCell implements Initializable {
     private Event currentEvent;
     private int eventIndex;
 
+    //hides vote response box on startup to allow visibility to voting option by default.
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         voteResponseBox.setVisible(false);
 
     }
+    //sets current event to pull from previous class
     public void setEvents(List<Event> events) {
         System.out.println("EventInfoCell: Number of events = " + events.size());
         this.events = events;
     }
+    //getters and setters
     public void setCurrentEvent(Event currentEvent){
         this.currentEvent = currentEvent;
     }
     public Event getCurrentEvent(){
         return currentEvent;
     }
+
     public void SetEventIndex(int index) {
         eventIndex = index;
     }
+
+    //handles the main logic of filling the calendar with all of the events stored in the database.
     public void PopulateMyEvents(int eventIndex){
         Vote.setVisible(false);
         if (events == null || events.size() <= eventIndex) {
@@ -120,6 +125,7 @@ public class MyEventsInfoCell implements Initializable {
             eventDescription.setText(event.getEventDescription());
         }
     }
+    //sends Yes vote to databse and tracks that this user has already voted
     public void VotedYes(){
         int voteValue = 1;
         String eventUUID = this.currentEvent.getEventUUID();
@@ -146,6 +152,7 @@ public class MyEventsInfoCell implements Initializable {
         }
 
     }
+    //sends No vote to database and marks that this user has voted
     public void VotedNo(){
         String eventUUID = this.currentEvent.getEventUUID();
         String userUUID = UserSession.getUserUUID();
@@ -174,6 +181,7 @@ public class MyEventsInfoCell implements Initializable {
         }
 
     }
+    //chceks if this user has voted and hides voting options if so.
     public void checkHasVoted(){
         if(currentEvent == null)return;
         String eventUUID = currentEvent.getEventUUID();
@@ -189,6 +197,7 @@ public class MyEventsInfoCell implements Initializable {
             Vote.setVisible(true);
         }
     }
+    //allows the person who created the event to edit the event. Follows same logic and creating a new event while leaving blank fields as the orginal data
     public void OpenEventEditPanel(ActionEvent openEventEditor){
         try {
 
@@ -214,6 +223,7 @@ public class MyEventsInfoCell implements Initializable {
             throw new RuntimeException(e);
         }
     }
+    //opens the confirmation screen for deleting an event
     public void OpenDeleteEventConfirmation(ActionEvent event){
         try{
         Stage deletePanel = new Stage();

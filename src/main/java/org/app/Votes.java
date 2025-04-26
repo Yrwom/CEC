@@ -6,7 +6,7 @@ public class Votes {
     private int voteNoCount;
 
     public Votes() {
-
+    //public Votes object to allow instance control
     }
 
     public String GetEventUUID() {
